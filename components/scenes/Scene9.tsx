@@ -13,7 +13,6 @@ interface MarketSegment {
   revenue: string;
   description: string;
   color: string;
-  bgGradient: string;
 }
 
 const marketSegments: MarketSegment[] = [
@@ -26,7 +25,6 @@ const marketSegments: MarketSegment[] = [
     revenue: '$100+ per person',
     description: 'Luxury dining survives by catering to affluent customers willing to pay premium prices.',
     color: 'emerald',
-    bgGradient: 'from-emerald-950 to-slate-900',
   },
   {
     id: 2,
@@ -37,7 +35,6 @@ const marketSegments: MarketSegment[] = [
     revenue: '$15-30 per person',
     description: 'The vanishing middle: caught between rising costs and price-sensitive customers.',
     color: 'red',
-    bgGradient: 'from-red-950 to-slate-900',
   },
   {
     id: 3,
@@ -48,7 +45,6 @@ const marketSegments: MarketSegment[] = [
     revenue: '$10-15 per person',
     description: 'Chains with economies of scale can absorb costs that independent restaurants cannot.',
     color: 'blue',
-    bgGradient: 'from-blue-950 to-slate-900',
   },
 ];
 
@@ -92,7 +88,7 @@ export default function Scene9() {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 py-24"
+      className="relative min-h-screen bg-background py-24"
     >
       <div className="container mx-auto px-4">
         <motion.div
@@ -101,10 +97,10 @@ export default function Scene9() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-6xl font-bold text-white mb-6">
+          <h2 className="text-6xl font-bold text-foreground mb-6">
             The Hollowing Out
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Vancouver's restaurant industry is becoming barbell-shaped: luxury at the top, chains at the bottom, and the middle disappearing.
           </p>
         </motion.div>
@@ -143,12 +139,9 @@ export default function Scene9() {
                 >
                   <div
                     className={`
-                      bg-gradient-to-br ${segment.bgGradient}
-                      rounded-3xl p-8 border-2
-                      ${segment.trend === 'thriving' && 'border-emerald-500/50'}
-                      ${segment.trend === 'vanishing' && 'border-red-500/50'}
-                      ${segment.trend === 'expanding' && 'border-blue-500/50'}
-                      shadow-2xl
+                      bg-card border border-border
+                      rounded-xl p-8
+                      shadow-sm
                       ${isActive ? 'w-[400px] h-[500px]' : 'w-[350px] h-[450px]'}
                       transition-all duration-500
                     `}
@@ -157,10 +150,10 @@ export default function Scene9() {
                     <div className="flex justify-between items-start mb-6">
                       <div
                         className={`
-                          px-4 py-2 rounded-full text-sm font-bold
-                          ${segment.trend === 'thriving' && 'bg-emerald-500/20 text-emerald-400'}
-                          ${segment.trend === 'vanishing' && 'bg-red-500/20 text-red-400'}
-                          ${segment.trend === 'expanding' && 'bg-blue-500/20 text-blue-400'}
+                          px-4 py-2 rounded-full text-sm font-bold bg-card border border-border
+                          ${segment.trend === 'thriving' && 'text-emerald-400'}
+                          ${segment.trend === 'vanishing' && 'text-red-400'}
+                          ${segment.trend === 'expanding' && 'text-blue-400'}
                         `}
                       >
                         {segment.trend === 'thriving' && 'Thriving'}
@@ -177,7 +170,7 @@ export default function Scene9() {
                     </div>
 
                     {/* Category */}
-                    <h3 className="text-3xl font-bold text-white mb-4">
+                    <h3 className="text-3xl font-bold text-foreground mb-4">
                       {segment.category}
                     </h3>
 
@@ -191,38 +184,27 @@ export default function Scene9() {
                       `}>
                         {segment.revenue}
                       </div>
-                      <div className="text-sm text-gray-400">Average check</div>
+                      <div className="text-sm text-muted-foreground">Average check</div>
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-300 mb-6 leading-relaxed">
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
                       {segment.description}
                     </p>
 
                     {/* Examples */}
                     <div className="space-y-2">
-                      <div className="text-sm text-gray-400 font-semibold">Examples:</div>
+                      <div className="text-sm text-muted-foreground font-semibold">Examples:</div>
                       {segment.examples.map((example, i) => (
                         <div
                           key={i}
-                          className="bg-white/5 backdrop-blur-sm rounded-lg px-3 py-2 text-sm text-gray-300"
+                          className="bg-card border border-border rounded-xl px-3 py-2 text-sm text-muted-foreground shadow-sm"
                         >
                           {example}
                         </div>
                       ))}
                     </div>
 
-                    {/* Glow effect */}
-                    {isActive && (
-                      <div
-                        className={`
-                          absolute inset-0 rounded-3xl blur-2xl opacity-30 -z-10
-                          ${segment.trend === 'thriving' && 'bg-emerald-500'}
-                          ${segment.trend === 'vanishing' && 'bg-red-500'}
-                          ${segment.trend === 'expanding' && 'bg-blue-500'}
-                        `}
-                      />
-                    )}
                   </div>
                 </motion.div>
               );
@@ -237,7 +219,7 @@ export default function Scene9() {
                 onClick={() => setActiveIndex(index)}
                 className={`
                   h-3 rounded-full transition-all duration-300
-                  ${index === activeIndex ? 'w-12 bg-white' : 'w-3 bg-white/30 hover:bg-white/50'}
+                  ${index === activeIndex ? 'w-12 bg-foreground' : 'w-3 bg-border hover:bg-muted-foreground'}
                 `}
                 aria-label={`Go to card ${index + 1}`}
               />
@@ -252,22 +234,22 @@ export default function Scene9() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-20 max-w-4xl mx-auto"
         >
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">
+          <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+            <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
               The Middle is Disappearing
             </h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-4xl font-bold text-emerald-400 mb-2">+15%</div>
-                <div className="text-sm text-gray-400">High-end restaurant growth</div>
+                <div className="text-sm text-muted-foreground">High-end restaurant growth</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-red-400 mb-2">-40%</div>
-                <div className="text-sm text-gray-400">Mid-market closures</div>
+                <div className="text-sm text-muted-foreground">Mid-market closures</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-blue-400 mb-2">+25%</div>
-                <div className="text-sm text-gray-400">QSR expansion</div>
+                <div className="text-sm text-muted-foreground">QSR expansion</div>
               </div>
             </div>
           </div>

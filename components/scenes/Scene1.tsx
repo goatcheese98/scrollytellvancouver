@@ -1,145 +1,163 @@
 'use client';
 
-import { useInView } from 'react-intersection-observer';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { CompareDemo } from '@/components/ui/compare-demo';
+import { TypingText } from '@/components/ui/typing-text';
 
 export default function Scene1() {
-  const { ref, inView } = useInView({
-    threshold: 0.3,
-    triggerOnce: false,
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
   });
-  const fadeUp = {
-    hidden: { opacity: 0, y: 32 },
-    visible: { opacity: 1, y: 0 },
-  };
+
+  // Title animation: visible at start, fades out early
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.15], [0, -50]);
+
+  // Context block: appears early, exits mid-way
+  const contextOpacity = useTransform(scrollYProgress, [0.1, 0.2, 0.4, 0.5], [0, 1, 1, 0]);
+  const contextY = useTransform(scrollYProgress, [0.1, 0.2, 0.4, 0.5], [50, 0, 0, -50]);
+
+  // Stat cards: appear after context exits
+  const statsOpacity = useTransform(scrollYProgress, [0.45, 0.55, 0.85, 0.95], [0, 1, 1, 0]);
+  const statsY = useTransform(scrollYProgress, [0.45, 0.55], [50, 0]);
+
+  // Numbers block: appears after stats
+  const numbersOpacity = useTransform(scrollYProgress, [0.65, 0.75, 0.85, 0.95], [0, 1, 1, 0]);
+  const numbersY = useTransform(scrollYProgress, [0.65, 0.75], [50, 0]);
 
   return (
     <section
-      ref={ref}
-      className="relative isolate flex min-h-screen items-center overflow-hidden bg-slate-950 text-white"
+      ref={sectionRef}
+      className="relative h-[400vh] bg-background"
     >
-      <div
-        className="pointer-events-none absolute inset-0 -z-20"
-        style={{
-          backgroundImage: 'url(/images/menu-backdrop.svg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(60px)',
-          transform: 'scale(1.05)',
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-slate-950/65 backdrop-blur-[3px]" />
-      <div
-        className="pointer-events-none absolute inset-0 -z-5 opacity-15"
-        style={{
-          backgroundImage:
-            'linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(0deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
-          backgroundSize: '120px 120px',
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 -z-4 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),_transparent_55%)]" />
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+        <div className="container mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-      <div className="container relative z-10 mx-auto max-w-6xl px-6 py-24">
-        <motion.div
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          variants={{
-            visible: {
-              transition: {
-                staggerChildren: 0.12,
-              },
-            },
-          }}
-          className="mx-auto flex max-w-4xl flex-col items-center text-center"
-        >
-          <motion.span
-            variants={fadeUp}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-medium uppercase tracking-[0.35em] text-emerald-200 shadow-[0_0_30px_rgba(16,185,129,0.25)]"
-          >
-            2015 → 2025
-          </motion.span>
+            {/* Left Side - Dynamic Content */}
+            <div className="relative h-[600px]">
 
-          <motion.h1
-            variants={fadeUp}
-            className="text-balance text-5xl font-semibold leading-tight sm:text-6xl"
-          >
-            The Sticker Shock
-          </motion.h1>
+              {/* Title - Appears first, fades out */}
+              <motion.div
+                style={{ opacity: titleOpacity, y: titleY }}
+                className="absolute inset-0 flex flex-col justify-center"
+              >
+                <span className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-muted px-4 py-2 text-sm font-medium uppercase tracking-[0.35em] text-muted-foreground">
+                  2015 → 2025
+                </span>
+                <h1 className="text-5xl font-semibold leading-tight sm:text-6xl text-foreground mb-6">
+                  The Sticker Shock
+                </h1>
+                <p className="text-lg text-muted-foreground sm:text-xl max-w-xl">
+                  Vancouver&apos;s go-to comfort bowl now costs nearly double. Explore how a simple large pho went from an easy
+                  weeknight staple to a luxury line item.
+                </p>
+              </motion.div>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-6 max-w-2xl text-lg text-slate-200 sm:text-xl"
-          >
-            Vancouver&apos;s go-to comfort bowl now costs nearly double. Explore how a simple large pho went from an easy
-            weeknight staple to a luxury line item.
-          </motion.p>
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          variants={{
-            visible: {
-              transition: {
-                delayChildren: 0.2,
-                staggerChildren: 0.12,
-              },
-            },
-          }}
-          className="mt-20 flex flex-col gap-10 lg:flex-row lg:items-stretch"
-        >
-          <motion.div
-            variants={fadeUp}
-            className="order-2 grid flex-1 gap-6 text-left text-slate-200 sm:grid-cols-2 lg:order-1 lg:flex lg:flex-col lg:justify-between"
-          >
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-inner shadow-emerald-500/10">
-              <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/80">Increase</p>
-              <p className="mt-4 text-3xl font-semibold text-emerald-100 lg:text-4xl">+88%</p>
-              <p className="mt-3 text-sm text-slate-200/70">Ten-year jump in the cost of a single large pho.</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-inner shadow-cyan-500/10">
-              <p className="text-xs uppercase tracking-[0.35em] text-cyan-200/80">Dollar difference</p>
-              <p className="mt-4 text-3xl font-semibold text-cyan-100 lg:text-4xl">$7.50</p>
-              <p className="mt-3 text-sm text-slate-200/70">Equivalent to adding a second meal to every order.</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-inner shadow-rose-500/10 lg:col-span-2">
-              <p className="text-xs uppercase tracking-[0.35em] text-rose-200/80">Current price</p>
-              <p className="mt-4 text-3xl font-semibold text-rose-100 lg:text-4xl">$16.00</p>
-              <p className="mt-3 text-sm text-slate-200/70">Before tip, taxes, and delivery platform fees.</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            className="order-1 flex flex-1 items-center justify-center lg:order-2"
-          >
-            <div className="relative w-full max-w-[640px]">
-              <div className="absolute inset-0 -z-10 rounded-[36px] bg-gradient-to-br from-emerald-500/25 via-transparent to-rose-500/25 blur-3xl" />
-              <div className="overflow-hidden rounded-[32px] border border-white/12 bg-white/5 p-2 shadow-[0_40px_120px_-50px_rgba(15,23,42,0.9)] backdrop-blur-3xl">
-                <div className="relative rounded-[28px] border border-white/5 bg-slate-950/40">
-                  <CompareDemo />
-                  <div className="pointer-events-none absolute inset-0 rounded-[28px] border border-white/10 shadow-[inset_0_0_45px_rgba(15,23,42,0.55)]" />
-                  <div className="pointer-events-none absolute inset-0 animate-pulse rounded-[28px] bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.18),_rgba(255,255,255,0))]" />
-                  <div className="pointer-events-none absolute inset-0 animate-[pulse_3s_ease-in-out_infinite] rounded-[28px] bg-gradient-to-r from-transparent via-white/6 to-transparent" />
+              {/* Context Block - Appears second with typing effect */}
+              <motion.div
+                style={{ opacity: contextOpacity, y: contextY }}
+                className="absolute inset-0 flex items-center"
+              >
+                <div className="rounded-xl border border-border bg-card p-8 max-w-2xl">
+                  <div className="mb-3 text-4xl">💡</div>
+                  <h3 className="mb-4 text-2xl font-semibold text-foreground">CONTEXT</h3>
+                  <div className="space-y-4 text-lg text-muted-foreground">
+                    <TypingText
+                      text="In 2015, a large pho was a $8-10 staple that fed families across Vancouver's neighborhoods. By 2025, that same bowl requires the equivalent of a 2015 dinner for two."
+                      delay={0.5}
+                      speed={0.02}
+                    />
+                    <p className="font-semibold text-foreground pt-4">
+                      This isn&apos;t just inflation—it&apos;s a fundamental shift in Vancouver&apos;s food accessibility.
+                    </p>
+                  </div>
                 </div>
+              </motion.div>
+
+              {/* Numbers Block - Appears third */}
+              <motion.div
+                style={{ opacity: statsOpacity, y: statsY }}
+                className="absolute inset-0 flex items-center"
+              >
+                <div className="space-y-8 w-full max-w-2xl">
+                  {/* Main stat */}
+                  <div className="text-center space-y-4">
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.3, duration: 0.5, ease: "easeOut" }}
+                    >
+                      <p className="text-8xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-red-600 bg-clip-text text-transparent leading-none">
+                        +100%
+                      </p>
+                    </motion.div>
+                    <p className="text-xl text-muted-foreground font-medium">
+                      Price increase in 10 years
+                    </p>
+                  </div>
+
+                  {/* Key numbers grid */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border">
+                      <p className="text-3xl font-bold text-foreground">1,200+</p>
+                      <p className="text-sm text-muted-foreground mt-1">Restaurants closed</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border">
+                      <p className="text-3xl font-bold text-foreground">1/week</p>
+                      <p className="text-sm text-muted-foreground mt-1">Current closure rate</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border">
+                      <p className="text-3xl font-bold text-foreground">75%</p>
+                      <p className="text-sm text-muted-foreground mt-1">Families eating out less</p>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border">
+                      <p className="text-3xl font-bold text-foreground">~0</p>
+                      <p className="text-sm text-muted-foreground mt-1">Mid-market options left</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Call to action - Appears fourth */}
+              <motion.div
+                style={{ opacity: numbersOpacity, y: numbersY }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="text-center space-y-6 max-w-2xl">
+                  <h3 className="text-4xl font-bold text-foreground leading-tight">
+                    What&apos;s really happening to<br />Vancouver&apos;s restaurant scene?
+                  </h3>
+                  <p className="text-lg text-muted-foreground">
+                    Continue scrolling to investigate
+                  </p>
+                  <div className="flex items-center justify-center">
+                    <motion.div
+                      animate={{ y: [0, 8, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="text-3xl"
+                    >
+                      ↓
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Right Side - Menu Comparison (Always Visible) */}
+            <div className="flex items-center justify-center">
+              <div className="w-full max-w-[720px]">
+                <CompareDemo />
               </div>
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-slate-300/80">
-                <div className="flex items-center gap-1">
-                  <span className="block h-2 w-2 rounded-full bg-white/60" />
-                  Drag to compare
-                </div>
-                <svg className="h-4 w-4 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                </svg>
-                <div className="flex items-center gap-1">
-                  <span className="block h-2 w-2 rounded-full bg-white/60" />
-                  Tap &amp; hold on mobile
-                </div>
-              </div>
             </div>
-          </motion.div>
-        </motion.div>
+
+          </div>
+        </div>
       </div>
     </section>
   );

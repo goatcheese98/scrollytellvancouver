@@ -1,0 +1,39 @@
+{
+  "menuSources": {
+    "2015": {
+      "restaurant": "Pho Goodness",
+      "location": "Vancouver, BC",
+      "archiveUrl": "https://web.archive.org/web/20150309061033/http://www.phogoodness.com/menu.html",
+      "archiveDate": "March 9, 2015",
+      "notes": "Original menu from Wayback Machine showing pho prices at $8.00-$8.50",
+      "keyPrices": {
+        "phoDacBiet": "$8.50",
+        "phoTai": "$8.00",
+        "phoTaiNam": "$8.00",
+        "phoBoVien": "$8.00"
+      }
+    },
+    "2025": {
+      "restaurant": "Pho Goodness",
+      "location": "Vancouver, BC",
+      "currentUrl": "https://www.phogoodness.com/menu",
+      "accessDate": "November 2, 2025",
+      "notes": "Current menu showing pho prices at $16.00-$17.00",
+      "keyPrices": {
+        "phoDacBiet": "$17.00",
+        "phoTai": "$16.00",
+        "phoTaiNam": "$16.00",
+        "phoBoVien": "$16.00"
+      }
+    }
+  },
+  "priceComparison": {
+    "signatureDish": "Pho Dac Biet (Special Beef Noodle Soup)",
+    "price2015": 8.50,
+    "price2025": 17.00,
+    "percentageIncrease": 100,
+    "yearSpan": 10,
+    "inflationContext": "This 100% increase far exceeds the general inflation rate of ~27% over the same period, highlighting the specific pressures on Vancouver's restaurant industry including rising commercial rents, labor costs, and delivery platform fees."
+  }
+}
+

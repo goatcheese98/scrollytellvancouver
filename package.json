@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
+    "@tabler/icons-react": "^3.35.0",
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "aceternity-ui": "^0.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -19,6 +23,7 @@
     "lucide-react": "^0.552.0",
     "mapbox-gl": "^3.16.0",
     "maplibre-gl": "^5.10.0",
+    "motion": "^12.23.24",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",

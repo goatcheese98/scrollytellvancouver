@@ -1,104 +1,243 @@
-'use client';
-
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+"use client";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { SparklesCore } from "@/components/ui/sparkles";
+import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 interface CompareProps {
-  firstImage: string;
-  secondImage: string;
-  firstImageClassName?: string;
-  secondImageClassName?: string;
+  firstImage?: string;
+  secondImage?: string;
   className?: string;
-  slideMode?: 'hover' | 'drag';
+  firstImageClassName?: string;
+  secondImageClassname?: string;
+  initialSliderPercentage?: number;
+  slideMode?: "hover" | "drag";
+  showHandlebar?: boolean;
+  autoplay?: boolean;
+  autoplayDuration?: number;
 }
-
 export const Compare = ({
-  firstImage,
-  secondImage,
-  firstImageClassName,
-  secondImageClassName,
+  firstImage = "",
+  secondImage = "",
   className,
-  slideMode = 'drag',
+  firstImageClassName,
+  secondImageClassname,
+  initialSliderPercentage = 50,
+  slideMode = "hover",
+  showHandlebar = true,
+  autoplay = false,
+  autoplayDuration = 5000,
 }: CompareProps) => {
-  const [sliderXPercent, setSliderXPercent] = useState(50);
+  const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMove = (clientX: number, rect: DOMRect) => {
-    const x = clientX - rect.left;
-    const percent = (x / rect.width) * 100;
-    setSliderXPercent(Math.max(0, Math.min(100, percent)));
-  };
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (slideMode === 'drag' && !isDragging) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    handleMove(e.clientX, rect);
-  };
+  const [isMouseOver, setIsMouseOver] = useState(false);
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (slideMode === 'drag' && !isDragging) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    handleMove(e.touches[0].clientX, rect);
-  };
+  const autoplayRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startAutoplay = useCallback(() => {
+    if (!autoplay) return;
+
+    const startTime = Date.now();
+    const animate = () => {
+      const elapsedTime = Date.now() - startTime;
+      const progress =
+        (elapsedTime % (autoplayDuration * 2)) / autoplayDuration;
+      const percentage = progress <= 1 ? progress * 100 : (2 - progress) * 100;
+
+      setSliderXPercent(percentage);
+      autoplayRef.current = setTimeout(animate, 16); // ~60fps
+    };
+
+    animate();
+  }, [autoplay, autoplayDuration]);
+
+  const stopAutoplay = useCallback(() => {
+    if (autoplayRef.current) {
+      clearTimeout(autoplayRef.current);
+      autoplayRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    startAutoplay();
+    return () => stopAutoplay();
+  }, [startAutoplay, stopAutoplay]);
+
+  function mouseEnterHandler() {
+    setIsMouseOver(true);
+    stopAutoplay();
+  }
+
+  function mouseLeaveHandler() {
+    setIsMouseOver(false);
+    if (slideMode === "hover") {
+      setSliderXPercent(initialSliderPercentage);
+    }
+    if (slideMode === "drag") {
+      setIsDragging(false);
+    }
+    startAutoplay();
+  }
+
+  const handleStart = useCallback(
+    (clientX: number) => {
+      if (slideMode === "drag") {
+        setIsDragging(true);
+      }
+    },
+    [slideMode]
+  );
+
+  const handleEnd = useCallback(() => {
+    if (slideMode === "drag") {
+      setIsDragging(false);
+    }
+  }, [slideMode]);
+
+  const handleMove = useCallback(
+    (clientX: number) => {
+      if (!sliderRef.current) return;
+      if (slideMode === "hover" || (slideMode === "drag" && isDragging)) {
+        const rect = sliderRef.current.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const percent = (x / rect.width) * 100;
+        requestAnimationFrame(() => {
+          setSliderXPercent(Math.max(0, Math.min(100, percent)));
+        });
+      }
+    },
+    [slideMode, isDragging]
+  );
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => handleStart(e.clientX),
+    [handleStart]
+  );
+  const handleMouseUp = useCallback(() => handleEnd(), [handleEnd]);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => handleMove(e.clientX),
+    [handleMove]
+  );
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (!autoplay) {
+        handleStart(e.touches[0].clientX);
+      }
+    },
+    [handleStart, autoplay]
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    if (!autoplay) {
+      handleEnd();
+    }
+  }, [handleEnd, autoplay]);
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!autoplay) {
+        handleMove(e.touches[0].clientX);
+      }
+    },
+    [handleMove, autoplay]
+  );
 
   return (
     <div
-      className={`relative w-full overflow-hidden ${className}`}
+      ref={sliderRef}
+      className={cn("w-[400px] h-[400px] overflow-hidden", className)}
+      style={{
+        position: "relative",
+        cursor: slideMode === "drag" ? "grab" : "col-resize",
+      }}
       onMouseMove={handleMouseMove}
-      onMouseDown={() => slideMode === 'drag' && setIsDragging(true)}
-      onMouseUp={() => slideMode === 'drag' && setIsDragging(false)}
-      onMouseLeave={() => slideMode === 'drag' && setIsDragging(false)}
+      onMouseLeave={mouseLeaveHandler}
+      onMouseEnter={mouseEnterHandler}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
-      onTouchStart={() => slideMode === 'drag' && setIsDragging(true)}
-      onTouchEnd={() => slideMode === 'drag' && setIsDragging(false)}
     >
-      {/* First Image (Background) */}
-      <div className="absolute inset-0">
-        <img
-          src={firstImage}
-          alt="First"
-          className={`w-full h-full object-cover ${firstImageClassName}`}
-        />
-      </div>
+      <AnimatePresence initial={false}>
+        <motion.div
+          className="h-full w-px absolute top-0 m-auto bg-gradient-to-b from-transparent from-[5%] to-[95%] via-primary to-transparent"
+          style={{
+            left: `${sliderXPercent}%`,
+            top: "0",
+            zIndex: 50,
+          }}
+          transition={{ duration: 0 }}
+        >
+          <div className="w-36 h-full [mask-image:radial-gradient(100px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-gradient-to-r from-primary/60 via-transparent to-transparent z-20 opacity-70" />
+          <div className="w-10 h-1/2 [mask-image:radial-gradient(50px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-gradient-to-r from-primary/80 via-transparent to-transparent z-10 opacity-100" />
 
-      {/* Second Image (Foreground with clip) */}
-      <div
-        className="absolute inset-0"
-        style={{
-          clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
-        }}
-      >
-        <img
-          src={secondImage}
-          alt="Second"
-          className={`w-full h-full object-cover ${secondImageClassName}`}
-        />
-      </div>
-
-      {/* Slider Line */}
-      <div
-        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize"
-        style={{ left: `${sliderXPercent}%` }}
-      >
-        {/* Slider Handle */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="bg-white rounded-full p-2 shadow-lg">
-            <svg
-              className="w-6 h-6 text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-              />
-            </svg>
+          {/* Sparkle effects container - centered on handle */}
+          <div className="w-20 h-20 top-1/2 -translate-y-1/2 absolute -right-10 overflow-visible pointer-events-none" style={{ zIndex: 100 }}>
+            <MemoizedSparklesCore
+              background="transparent"
+              minSize={0.4}
+              maxSize={1.5}
+              speed={4}
+              particleDensity={1200}
+              className="w-full h-full"
+              particleColor="#60A5FA"
+            />
           </div>
-        </div>
+          {showHandlebar && (
+            <div className="h-6 w-6 rounded-md top-1/2 -translate-y-1/2 bg-white -right-3 absolute flex items-center justify-center shadow-lg" style={{ zIndex: 60 }}>
+              <IconDotsVertical className="h-4 w-4 text-black" />
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+      <div className="overflow-hidden w-full h-full relative z-20 pointer-events-none">
+        <AnimatePresence initial={false}>
+          {firstImage ? (
+            <motion.div
+              className={cn(
+                "absolute inset-0 z-20 rounded-2xl shrink-0 w-full h-full select-none overflow-hidden",
+                firstImageClassName
+              )}
+              style={{
+                clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
+              }}
+              transition={{ duration: 0 }}
+            >
+              <img
+                alt="first image"
+                src={firstImage}
+                className={cn(
+                  "absolute inset-0 z-20 rounded-2xl shrink-0 w-full h-full select-none",
+                  firstImageClassName
+                )}
+                draggable={false}
+              />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
+
+      <AnimatePresence initial={false}>
+        {secondImage ? (
+          <motion.img
+            className={cn(
+              "absolute top-0 left-0 z-[19] rounded-2xl w-full h-full select-none",
+              secondImageClassname
+            )}
+            alt="second image"
+            src={secondImage}
+            draggable={false}
+          />
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 };
+
+const MemoizedSparklesCore = React.memo(SparklesCore);

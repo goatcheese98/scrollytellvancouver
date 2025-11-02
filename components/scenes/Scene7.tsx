@@ -12,7 +12,7 @@ export default function Scene7() {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 py-24"
+      className="relative min-h-screen bg-background py-24"
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen">
@@ -27,7 +27,7 @@ export default function Scene7() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-10"></div>
 
                 <div className="bg-white rounded-[2.5rem] overflow-hidden h-[600px]">
-                  <div className="bg-red-600 text-white p-4">
+                  <div className="bg-red-600 text-foreground p-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xl font-bold">DoorDash</h3>
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -99,78 +99,78 @@ export default function Scene7() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="space-y-6"
           >
-            <h2 className="text-5xl font-bold text-white mb-6">
+            <h2 className="text-5xl font-bold text-foreground mb-6">
               The Accelerant
             </h2>
 
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-4">The Provincial Fee Cap</h3>
-              <p className="text-gray-300 mb-4">
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <h3 className="text-2xl font-bold text-foreground mb-4">The Provincial Fee Cap</h3>
+              <p className="text-muted-foreground mb-4">
                 B.C. implemented a permanent <span className="text-blue-400 font-bold">20% cap</span> on delivery app fees to help restaurants.
               </p>
-              <div className="bg-green-950/30 border border-green-900/30 rounded-lg p-4">
+              <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
                 <p className="text-green-400 text-sm">
                   First permanent delivery-fee cap in Canada (2023)
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-4">But Platforms Responded...</h3>
-              <p className="text-gray-300 mb-4">
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <h3 className="text-2xl font-bold text-foreground mb-4">But Platforms Responded...</h3>
+              <p className="text-muted-foreground mb-4">
                 Apps added new <span className="text-red-400 font-bold">regulatory response fees</span> to offset the cap.
               </p>
-              <div className="bg-red-950/30 border border-red-900/30 rounded-lg p-4">
+              <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
                 <p className="text-red-400 text-sm">
                   The cost was simply passed to consumers instead
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-4">The Unintended Consequence</h3>
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <h3 className="text-2xl font-bold text-foreground mb-4">The Unintended Consequence</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-green-950/30 rounded-xl p-4 border border-green-900/30">
+                <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
                   <div className="text-3xl font-bold text-green-400">Surplus</div>
-                  <div className="text-sm text-gray-400 mt-1">Delivery Drivers</div>
+                  <div className="text-sm text-muted-foreground mt-1">Delivery Drivers</div>
                 </div>
-                <div className="bg-red-950/30 rounded-xl p-4 border border-red-900/30">
+                <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
                   <div className="text-3xl font-bold text-red-400">-16,000</div>
-                  <div className="text-sm text-gray-400 mt-1">Kitchen Staff</div>
+                  <div className="text-sm text-muted-foreground mt-1">Kitchen Staff</div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Better wages attracted drivers, but restaurants could not afford kitchen staff.
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-red-950 to-slate-900 rounded-2xl p-6 border-2 border-red-500/50">
-              <h3 className="text-xl font-bold text-white mb-4">The Fee Stack</h3>
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-foreground mb-4">The Fee Stack</h3>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-700 rounded-full h-8 overflow-hidden">
-                    <div className="bg-blue-500 h-full flex items-center px-3 text-white text-sm font-medium" style={{ width: '67%' }}>
+                  <div className="flex-1 bg-muted rounded-full h-8 overflow-hidden">
+                    <div className="bg-blue-500 h-full flex items-center px-3 text-foreground text-sm font-medium" style={{ width: '67%' }}>
                       Food: $24.00
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-700 rounded-full h-6 overflow-hidden">
-                    <div className="bg-red-500 h-full flex items-center px-3 text-white text-xs" style={{ width: '11%' }}>
+                  <div className="flex-1 bg-muted rounded-full h-6 overflow-hidden">
+                    <div className="bg-red-500 h-full flex items-center px-3 text-foreground text-xs" style={{ width: '11%' }}>
                       Delivery: $3.99
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-700 rounded-full h-6 overflow-hidden">
-                    <div className="bg-red-500 h-full flex items-center px-3 text-white text-xs" style={{ width: '12%' }}>
+                  <div className="flex-1 bg-muted rounded-full h-6 overflow-hidden">
+                    <div className="bg-red-500 h-full flex items-center px-3 text-foreground text-xs" style={{ width: '12%' }}>
                       Service: $4.20
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-700 rounded-full h-6 overflow-hidden">
-                    <div className="bg-red-600 h-full flex items-center px-3 text-white text-xs animate-pulse" style={{ width: '6%' }}>
+                  <div className="flex-1 bg-muted rounded-full h-6 overflow-hidden">
+                    <div className="bg-red-600 h-full flex items-center px-3 text-foreground text-xs animate-pulse" style={{ width: '6%' }}>
                       Regulatory: $2.00
                     </div>
                   </div>

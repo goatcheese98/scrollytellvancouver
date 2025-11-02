@@ -14,7 +14,7 @@ export default function Home() {
   useLenis();
 
   return (
-    <main className="relative bg-slate-900">
+    <main className="relative bg-background">
       <Scene1 />
       <Scene2 />
       <Scene3 />

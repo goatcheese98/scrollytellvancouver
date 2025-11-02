@@ -1,178 +1,105 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-
-const BASE_PRICE = 8.5;
-const CURRENT_PRICE = 16;
-
-const MENU_IMAGES = {
-  baseline: '/images/menu-2015.svg',
-  current: '/images/menu-2025.svg',
-};
+import React from "react";
+import { Compare } from "@/components/ui/compare";
+import { LinkPreview } from "@/components/ui/link-preview";
+import { ExternalLink, Calendar, TrendingUp } from "lucide-react";
 
 export const CompareDemo = () => {
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleMove = useCallback((clientX: number, rect: DOMRect) => {
-    const x = clientX - rect.left;
-    const percent = (x / rect.width) * 100;
-    setSliderPosition(Math.max(0, Math.min(100, percent)));
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!isDragging) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      handleMove(e.clientX, rect);
-    },
-    [handleMove, isDragging],
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent<HTMLDivElement>) => {
-      if (!isDragging) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      handleMove(e.touches[0].clientX, rect);
-    },
-    [handleMove, isDragging],
-  );
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      handleMove(e.clientX, rect);
-      setIsDragging(true);
-    },
-    [handleMove],
-  );
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      handleMove(e.touches[0].clientX, rect);
-      setIsDragging(true);
-    },
-    [handleMove],
-  );
-
-  const formattedDifference = useMemo(() => {
-    const diff = CURRENT_PRICE - BASE_PRICE;
-    return diff.toLocaleString('en-CA', {
-      style: 'currency',
-      currency: 'CAD',
-      minimumFractionDigits: 2,
-    });
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      className="group relative h-[480px] cursor-ew-resize overflow-hidden rounded-[26px] border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/50 to-slate-950/90 shadow-[0_35px_90px_-45px_rgba(2,6,23,0.85)] transition-shadow duration-300 ease-out"
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={() => setIsDragging(false)}
-      onMouseLeave={() => setIsDragging(false)}
-      onTouchMove={handleTouchMove}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={() => setIsDragging(false)}
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.2),_transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(248,113,113,0.15),_transparent_55%)]" />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-20"
-        style={{ backgroundImage: 'linear-gradient(120deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '140px 140px' }}
-      />
-
-      {/* 2015 Menu (Left) */}
-      <div className="absolute inset-6 rounded-[22px] overflow-hidden ring-1 ring-white/10">
-        <Image
-          src={MENU_IMAGES.baseline}
-          alt="2015 large pho menu price"
-          fill
-          sizes="(min-width: 1024px) 760px, 90vw"
-          className="object-cover pointer-events-none"
-        />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/60 to-transparent" />
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="text-center">
+        <h3 className="text-xl font-semibold text-foreground tracking-tight">Pho Goodness, Vancouver</h3>
       </div>
 
-      {/* 2025 Menu (Right Reveal) */}
-      <div
-        className="absolute inset-6 rounded-[22px] overflow-hidden ring-1 ring-white/10"
-        style={{
-          clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
-        }}
-      >
-        <Image
-          src={MENU_IMAGES.current}
-          alt="2025 large pho menu price"
-          fill
-          sizes="(min-width: 1024px) 760px, 90vw"
-          priority
-          className="object-cover pointer-events-none"
+      {/* Compare Interface */}
+      <div className="p-3 border rounded-xl bg-card border-border w-full max-w-[660px] mx-auto">
+        <Compare
+          firstImage="/images/menu-2015.svg"
+          secondImage="/images/menu-2025.svg"
+          firstImageClassName="object-contain object-center"
+          secondImageClassname="object-contain object-center"
+          className="h-[560px] w-full md:h-[700px] md:w-full"
+          slideMode="hover"
+          showHandlebar={true}
+          autoplay={false}
         />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/75 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/70 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-white/30" />
       </div>
-      <div className="pointer-events-none absolute inset-6 rounded-[22px] border border-white/10" />
 
-      {/* Slider Line & Handle */}
-      <div
-        className="pointer-events-none absolute top-0 bottom-0 z-30 w-px bg-gradient-to-b from-transparent via-white to-transparent drop-shadow-[0_0_18px_rgba(255,255,255,0.4)]"
-        style={{ left: `${sliderPosition}%` }}
-      >
-        <motion.div
-          initial={false}
-          animate={{ scale: isDragging ? 1.05 : 1 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-3 text-center"
+      {/* Price Increase Indicator */}
+      <div className="text-center pb-2">
+        <div className="flex items-center justify-center gap-2">
+          <TrendingUp className="h-4 w-4 text-destructive" />
+          <span className="text-sm font-semibold text-destructive">+100% price increase</span>
+        </div>
+      </div>
+
+      {/* Source Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        {/* 2015 Card */}
+        <LinkPreview
+          url="https://web.archive.org/web/20150309061033/http://www.phogoodness.com/menu.html"
+          preview={{
+            title: "Pho Goodness Menu - Wayback Machine (2015)",
+            description: "Archived restaurant menu from March 9, 2015, showing original pho pricing at $8.00-$8.50. Captured via Internet Archive's Wayback Machine.",
+            domain: "web.archive.org",
+            image: "/images/Pho-Goodness-menu-2015.png"
+          }}
         >
-          <motion.div
-            animate={{ y: isDragging ? -4 : 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-            className="pointer-events-auto rounded-full border border-white/20 bg-white/90 p-3 shadow-[0_18px_35px_-18px_rgba(2,6,23,0.65)] transition-transform duration-200 ease-out hover:scale-105"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              const rect = containerRef.current?.getBoundingClientRect();
-              if (rect) {
-                handleMove(e.clientX, rect);
-              }
-              setIsDragging(true);
-            }}
-            onTouchStart={(e) => {
-              const rect = containerRef.current?.getBoundingClientRect();
-              if (rect) {
-                handleMove(e.touches[0].clientX, rect);
-              }
-              setIsDragging(true);
-            }}
-          >
-            <svg
-              className="h-6 w-6 text-slate-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-            </svg>
-          </motion.div>
-          <div className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur">
-            {formattedDifference} more today
+          <div className="group block p-3 rounded-lg border border-border bg-[#F4E8C1]/10 hover:bg-[#F4E8C1]/20 transition-colors cursor-pointer">
+            <div className="flex items-start justify-between gap-2 mb-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-[#F4E8C1] border-2 border-[#8B2E1F] flex-shrink-0"></div>
+                <div>
+                  <span className="font-semibold text-foreground text-sm">2015 Menu</span>
+                  <span className="text-[10px] text-muted-foreground/70 ml-2">1183 Davie St</span>
+                </div>
+              </div>
+              <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0 mt-0.5" />
+            </div>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Calendar className="h-3 w-3 flex-shrink-0" />
+              <span className="text-[11px]">March 9, 2015 · Wayback Archive</span>
+            </div>
           </div>
-        </motion.div>
+        </LinkPreview>
+
+        {/* 2025 Card */}
+        <LinkPreview
+          url="https://www.phogoodness.com/menu-west-end.html"
+          preview={{
+            title: "Pho Goodness West End - Current Menu (2025)",
+            description: "Current restaurant menu showing pho pricing at $16.00-$17.00. West End location in Downtown Vancouver, BC.",
+            domain: "phogoodness.com",
+            image: "/images/Pho-Goodness-menu-2025.png"
+          }}
+        >
+          <div className="group block p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors cursor-pointer">
+            <div className="flex items-start justify-between gap-2 mb-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-white border-2 border-gray-400 flex-shrink-0"></div>
+                <div>
+                  <span className="font-semibold text-foreground text-sm">2025 Menu</span>
+                  <span className="text-[10px] text-muted-foreground/70 ml-2">1150 Davie St</span>
+                </div>
+              </div>
+              <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0 mt-0.5" />
+            </div>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Calendar className="h-3 w-3 flex-shrink-0" />
+              <span className="text-[11px]">Current (2025) · (604) 568-3253</span>
+            </div>
+          </div>
+        </LinkPreview>
       </div>
 
-      {/* Labels */}
-      <div className="pointer-events-none absolute top-6 left-6 inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-100">
-        2015
-      </div>
-      <div className="pointer-events-none absolute top-6 right-6 inline-flex items-center gap-2 rounded-full border border-rose-300/40 bg-rose-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-rose-100">
-        2025
+      {/* Context and Attribution */}
+      <div className="text-center space-y-2 pt-3">
+        <p className="text-sm text-muted-foreground font-medium">The same restaurant, 10 years apart</p>
+        <p className="text-[10px] text-muted-foreground/70">
+          Data sourced from authentic restaurant menus for journalism purposes
+        </p>
       </div>
     </div>
   );
