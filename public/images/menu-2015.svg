@@ -1,0 +1,28 @@
+<svg width="720" height="960" viewBox="0 0 720 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="960" rx="48" fill="url(#paint0_linear)" />
+  <rect x="36" y="36" width="648" height="888" rx="36" fill="#FFFFFF" opacity="0.94" />
+  <rect x="84" y="84" width="120" height="40" rx="20" fill="#CFF8E3"/>
+  <text x="144" y="112" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#0B7A4B">2015</text>
+  <text x="360" y="206" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#124034">PHO RESTAURANT</text>
+  <text x="360" y="244" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="18" font-weight="500" fill="#4A7762">Vancouver, BC · dine-in &amp; takeout</text>
+  <rect x="180" y="276" width="360" height="38" rx="19" fill="#E3F9EF"/>
+  <text x="360" y="302" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="600" letter-spacing="3" fill="#0B7A4B">SLOW SIMMERED BONE BROTH · HOUSE HERBS</text>
+  <rect x="108" y="360" width="504" height="300" rx="28" fill="#FFFFFF" stroke="#D5F2E4" stroke-width="3"/>
+  <text x="168" y="404" font-family="Inter, 'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#9AB9AD" letter-spacing="5">SIGNATURE BOWL</text>
+  <text x="168" y="436" font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="500" fill="#5D7C70">Rice noodles, rare beef, brisket, tendon, basil, bean sprouts, house chilli oil.</text>
+  <text x="564" y="504" text-anchor="end" font-family="Inter, 'Segoe UI', sans-serif" font-size="42" font-weight="700" fill="#0B7A4B">$8.50</text>
+  <g font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="500" fill="#4A7762">
+    <text x="156" y="520">• Stock simmered 16 hours</text>
+    <text x="156" y="552">• Local herbs &amp; aromatics</text>
+    <text x="156" y="584">• Small-batch chilli oil</text>
+    <text x="156" y="616">• Hand-cut brisket</text>
+  </g>
+  <rect x="108" y="704" width="504" height="120" rx="26" fill="#E9FAF2"/>
+  <text x="360" y="760" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#0B7A4B">Neighborhood staple families relied on for weeknight dinners.</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="72" y1="48" x2="648" y2="936" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3FFF9"/>
+      <stop offset="1" stop-color="#E1F8EE"/>
+    </linearGradient>
+  </defs>
+</svg>

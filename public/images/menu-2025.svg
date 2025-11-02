@@ -1,0 +1,28 @@
+<svg width="720" height="960" viewBox="0 0 720 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="960" rx="48" fill="url(#paint0_linear)" />
+  <rect x="36" y="36" width="648" height="888" rx="36" fill="#FFFFFF" opacity="0.9" />
+  <rect x="516" y="84" width="120" height="40" rx="20" fill="#F9D5DD"/>
+  <text x="576" y="112" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#9C394D">2025</text>
+  <text x="360" y="206" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#213755">PHO RESTAURANT</text>
+  <text x="360" y="244" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="18" font-weight="500" fill="#6A7E9C">Vancouver, BC · dine-in &amp; takeout</text>
+  <rect x="150" y="276" width="420" height="38" rx="19" fill="#F6EBFF"/>
+  <text x="360" y="302" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="600" letter-spacing="3" fill="#7C3AED">SLOW SIMMERED BONE BROTH · HOUSE HERBS</text>
+  <rect x="108" y="360" width="504" height="300" rx="28" fill="#FFFFFF" stroke="#F5D6DE" stroke-width="3"/>
+  <text x="168" y="404" font-family="Inter, 'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#B7A2B8" letter-spacing="5">SIGNATURE BOWL</text>
+  <text x="168" y="436" font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="500" fill="#6F7080">Rice noodles, rare beef, brisket, tendon, basil, bean sprouts, house chilli oil.</text>
+  <text x="564" y="504" text-anchor="end" font-family="Inter, 'Segoe UI', sans-serif" font-size="42" font-weight="700" fill="#D32C55">$16.00</text>
+  <g font-family="Inter, 'Segoe UI', sans-serif" font-size="16" font-weight="500" fill="#7E6C91">
+    <text x="156" y="520">• Stock simmered 16 hours</text>
+    <text x="156" y="552">• Local herbs &amp; aromatics</text>
+    <text x="156" y="584">• Small-batch chilli oil</text>
+    <text x="156" y="616">• Hand-cut brisket</text>
+  </g>
+  <rect x="108" y="704" width="504" height="120" rx="26" fill="#FCE5EA"/>
+  <text x="360" y="760" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="20" font-weight="600" fill="#C4314F">Includes delivery platform fees, insurance surcharges, and higher wages.</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="72" y1="48" x2="648" y2="936" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F7FF"/>
+      <stop offset="1" stop-color="#F1E4FF"/>
+    </linearGradient>
+  </defs>
+</svg>
