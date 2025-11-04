@@ -2,166 +2,320 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
+import { AnimatedNumber } from '@/components/ui/animated-number';
 
 export default function Scene3() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
+    target: sectionRef,
+    offset: ["start start", "end start"]
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
+  // Title section
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.05, 0.1, 0.15], [1, 1, 1, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.15], [0, -100]);
+
+  // Grid visualization
+  const gridOpacity = useTransform(scrollYProgress, [0.1, 0.15, 0.75, 0.82], [0, 1, 1, 0]);
+  const gridScale = useTransform(scrollYProgress, [0.75, 0.82], [1, 1.5]);
+
+  // Revenue (always visible, full grid)
+  const revenueOpacity = useTransform(scrollYProgress, [0.12, 0.17], [0, 1]);
+
+  // Food costs - takes 38% of the area
+  const foodHeight = useTransform(scrollYProgress, [0.22, 0.3], [0, 38]);
+
+  // Labour - takes another 38%
+  const labourHeight = useTransform(scrollYProgress, [0.32, 0.4], [0, 38]);
+
+  // Rent - takes 18%
+  const rentHeight = useTransform(scrollYProgress, [0.42, 0.5], [0, 18]);
+
+  // Other - takes 10%
+  const otherHeight = useTransform(scrollYProgress, [0.52, 0.6], [0, 10]);
+
+  // Overflow - the extra 4% that breaks the grid
+  const overflowHeight = useTransform(scrollYProgress, [0.62, 0.7], [0, 4]);
+  const overflowOpacity = useTransform(scrollYProgress, [0.62, 0.65], [0, 1]);
+
+  // Total label
+  const totalOpacity = useTransform(scrollYProgress, [0.65, 0.7], [0, 1]);
+
+  // Negative margin zoom
+  const marginOpacity = useTransform(scrollYProgress, [0.8, 0.87, 0.95, 1], [0, 1, 1, 1]);
+  const marginScale = useTransform(scrollYProgress, [0.8, 0.87], [0.5, 1]);
 
   return (
     <section
-      ref={containerRef}
-      className="relative bg-background"
-      style={{ height: '400vh' }}
+      ref={sectionRef}
+      className="relative h-[500vh] bg-background"
     >
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <div className="w-full">
-          <div className="container mx-auto px-4 mb-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl font-bold text-foreground text-center"
-            >
-              The Impossible Math
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-muted-foreground text-center mt-4"
-            >
-              How costs exceed 100% of revenue
-            </motion.p>
-          </div>
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+        <div className="container mx-auto max-w-7xl px-6">
 
+          {/* Title Section */}
           <motion.div
-            style={{ x }}
-            className="flex gap-8 px-8"
+            style={{ opacity: titleOpacity, y: titleY }}
+            className="absolute inset-0 flex flex-col items-center justify-center"
           >
-            <div className="flex-shrink-0 w-80">
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm h-[500px] flex flex-col justify-end">
-                <div className="bg-green-500 rounded-lg h-full flex items-center justify-center flex-col text-foreground">
-                  <div className="text-6xl font-bold">100%</div>
-                  <div className="text-xl mt-2">Revenue</div>
-                </div>
-              </div>
-              <div className="text-foreground text-center mt-4 font-semibold">Starting Point</div>
-            </div>
+            <h2 className="text-6xl font-bold text-foreground mb-6 text-center">
+              The Impossible Math
+            </h2>
+            <TextGenerateEffect
+              words="When operating costs exceed 100% of revenue, survival becomes impossible. Here's how 41% of B.C. restaurants are losing money."
+              className="text-2xl text-muted-foreground text-center max-w-4xl"
+              duration={0.5}
+            />
+          </motion.div>
 
-            <div className="flex-shrink-0 w-24 flex items-center justify-center">
-              <svg className="w-16 h-16 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
+          {/* Grid-Based Area Visualization */}
+          <motion.div
+            style={{ opacity: gridOpacity, scale: gridScale }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <div className="w-full max-w-4xl">
+              <h3 className="text-3xl font-bold text-foreground mb-8 text-center">
+                Restaurant Cost Breakdown (2025)
+              </h3>
 
-            <div className="flex-shrink-0 w-80">
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm h-[500px] flex flex-col justify-end">
-                <div className="bg-green-500 rounded-lg" style={{ height: '62%' }}>
-                  <div className="text-foreground text-center pt-4">
-                    <div className="text-2xl font-bold">62%</div>
-                    <div className="text-sm">Remaining</div>
+              {/* Main Grid Container */}
+              <div className="relative">
+                {/* Total Costs Label */}
+                <motion.div
+                  style={{ opacity: totalOpacity }}
+                  className="absolute -top-16 left-0 right-0 z-20"
+                >
+                  <div className="flex items-center justify-between bg-background/90 backdrop-blur-sm border-2 border-border rounded-xl p-4 shadow-lg">
+                    <div className="text-2xl font-bold text-foreground">TOTAL COSTS</div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-5xl font-bold text-red-500">
+                        <AnimatedNumber value={104} suffix="%" />
+                      </div>
+                      <div className="text-sm text-muted-foreground max-w-xs">
+                        Costs exceed revenue by 4%
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Grid visualization - using a 10x10 grid system (100 cells) */}
+                <div className="relative border-4 border-border rounded-2xl overflow-visible bg-card p-4">
+                  <div className="relative" style={{ height: '600px' }}>
+
+                    {/* Revenue baseline - full grid background */}
+                    <motion.div
+                      style={{ opacity: revenueOpacity }}
+                      className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl overflow-hidden"
+                    >
+                      <div className="absolute top-8 left-8 z-10">
+                        <div className="text-sm font-semibold text-white/80">REVENUE</div>
+                        <div className="text-6xl font-bold text-white">100%</div>
+                      </div>
+                      <motion.div
+                        animate={{
+                          x: ["-100%", "100%"],
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      />
+                    </motion.div>
+
+                    {/* Food Costs - fills from bottom */}
+                    <motion.div
+                      style={{
+                        height: foodHeight.get() > 0 ? `${foodHeight.get()}%` : '0%',
+                      }}
+                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-br from-rose-400 to-rose-500 rounded-b-xl transition-all duration-300 ease-out"
+                    >
+                      {foodHeight.get() > 10 && (
+                        <div className="absolute top-4 left-8 right-8 flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-semibold text-white/90">FOOD COSTS</div>
+                            <div className="text-xs text-white/70">+36% since 2019</div>
+                          </div>
+                          <div className="text-4xl font-bold text-white">38%</div>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    {/* Labour - fills above food costs */}
+                    <motion.div
+                      style={{
+                        height: labourHeight.get() > 0 ? `${labourHeight.get()}%` : '0%',
+                        bottom: `${foodHeight.get()}%`,
+                      }}
+                      className="absolute left-0 right-0 bg-gradient-to-br from-orange-400 to-orange-500 transition-all duration-300 ease-out"
+                    >
+                      {labourHeight.get() > 10 && (
+                        <div className="absolute top-4 left-8 right-8 flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-semibold text-white/90">LABOUR</div>
+                            <div className="text-xs text-white/70">+70% min wage</div>
+                          </div>
+                          <div className="text-4xl font-bold text-white">38%</div>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    {/* Rent - fills above labour */}
+                    <motion.div
+                      style={{
+                        height: rentHeight.get() > 0 ? `${rentHeight.get()}%` : '0%',
+                        bottom: `${foodHeight.get() + labourHeight.get()}%`,
+                      }}
+                      className="absolute left-0 right-0 bg-gradient-to-br from-amber-400 to-amber-500 transition-all duration-300 ease-out"
+                    >
+                      {rentHeight.get() > 8 && (
+                        <div className="absolute top-4 left-8 right-8 flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-semibold text-white/90">RENT</div>
+                            <div className="text-xs text-white/70">Commercial real estate</div>
+                          </div>
+                          <div className="text-3xl font-bold text-white">18%</div>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    {/* Other - fills above rent */}
+                    <motion.div
+                      style={{
+                        height: otherHeight.get() > 0 ? `${otherHeight.get()}%` : '0%',
+                        bottom: `${foodHeight.get() + labourHeight.get() + rentHeight.get()}%`,
+                      }}
+                      className="absolute left-0 right-0 bg-gradient-to-br from-purple-400 to-purple-500 transition-all duration-300 ease-out"
+                    >
+                      {otherHeight.get() > 5 && (
+                        <div className="absolute top-3 left-8 right-8 flex items-center justify-between">
+                          <div>
+                            <div className="text-xs font-semibold text-white/90">OTHER</div>
+                            <div className="text-xs text-white/70">Insurance, fees</div>
+                          </div>
+                          <div className="text-2xl font-bold text-white">10%</div>
+                        </div>
+                      )}
+                    </motion.div>
+
+                    {/* Overflow - breaks out of the grid! */}
+                    <motion.div
+                      style={{
+                        height: overflowHeight.get() > 0 ? `${overflowHeight.get()}%` : '0%',
+                        opacity: overflowOpacity,
+                        bottom: '100%',
+                      }}
+                      className="absolute left-0 right-0 bg-gradient-to-br from-red-500 to-red-600 rounded-t-xl border-4 border-red-500 transition-all duration-300 ease-out"
+                    >
+                      <motion.div
+                        animate={{
+                          opacity: [0.7, 1, 0.7],
+                          scale: [1, 1.02, 1],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0 flex items-center justify-center"
+                      >
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">OVERFLOW</div>
+                          <div className="text-4xl font-bold text-white">+4%</div>
+                        </div>
+                      </motion.div>
+                    </motion.div>
+
                   </div>
                 </div>
-                <div className="bg-red-500 rounded-lg mt-2 flex items-center justify-center flex-col text-foreground" style={{ height: '38%' }}>
-                  <div className="text-4xl font-bold">38%</div>
-                  <div className="text-lg">COGS</div>
-                  <div className="text-xs mt-1">Food Costs</div>
-                </div>
-              </div>
-              <div className="text-foreground text-center mt-4 font-semibold">Cost of Goods</div>
-            </div>
 
-            <div className="flex-shrink-0 w-24 flex items-center justify-center">
-              <svg className="w-16 h-16 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-
-            <div className="flex-shrink-0 w-80">
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm h-[500px] flex flex-col justify-end">
-                <div className="bg-green-500 rounded-lg" style={{ height: '24%' }}>
-                  <div className="text-foreground text-center pt-4">
-                    <div className="text-2xl font-bold">24%</div>
-                    <div className="text-sm">Remaining</div>
-                  </div>
-                </div>
-                <div className="bg-primary rounded-lg mt-2 flex items-center justify-center flex-col text-foreground" style={{ height: '38%' }}>
-                  <div className="text-4xl font-bold">38%</div>
-                  <div className="text-lg">Labour</div>
-                  <div className="text-xs mt-1">+70% wages</div>
-                </div>
-                <div className="bg-red-600 rounded-lg mt-2" style={{ height: '38%' }}></div>
-              </div>
-              <div className="text-foreground text-center mt-4 font-semibold">Payroll</div>
-            </div>
-
-            <div className="flex-shrink-0 w-24 flex items-center justify-center">
-              <svg className="w-16 h-16 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-
-            <div className="flex-shrink-0 w-80">
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm h-[500px] flex flex-col justify-end">
-                <div className="bg-green-500 rounded-lg" style={{ height: '6%' }}>
-                  <div className="text-foreground text-center pt-2">
-                    <div className="text-xl font-bold">6%</div>
-                  </div>
-                </div>
-                <div className="bg-yellow-500 rounded-lg mt-2 flex items-center justify-center flex-col text-foreground" style={{ height: '18%' }}>
-                  <div className="text-3xl font-bold">18%</div>
-                  <div className="text-base">Rent</div>
-                </div>
-                <div className="bg-orange-600 rounded-lg mt-2" style={{ height: '38%' }}></div>
-                <div className="bg-red-600 rounded-lg mt-2" style={{ height: '38%' }}></div>
-              </div>
-              <div className="text-foreground text-center mt-4 font-semibold">Occupancy</div>
-            </div>
-
-            <div className="flex-shrink-0 w-24 flex items-center justify-center">
-              <svg className="w-16 h-16 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-
-            <div className="flex-shrink-0 w-80">
-              <div className="bg-card border border-border rounded-xl p-6 shadow-sm h-[500px] relative overflow-visible">
-                <div className="absolute bottom-0 left-0 right-0 flex flex-col justify-end h-full">
-                  <div className="bg-purple-500 rounded-lg flex items-center justify-center flex-col text-foreground border-4 border-red-500 animate-pulse" style={{ height: '10%', marginBottom: '-10%' }}>
-                    <div className="text-3xl font-bold">10%</div>
-                    <div className="text-base">Other</div>
-                    <div className="text-xs">OVERFLOW</div>
-                  </div>
-                  <div className="bg-yellow-600 rounded-lg" style={{ height: '18%' }}></div>
-                  <div className="bg-orange-600 rounded-lg mt-2" style={{ height: '38%' }}></div>
-                  <div className="bg-red-600 rounded-lg mt-2" style={{ height: '38%' }}></div>
-                </div>
-              </div>
-              <div className="text-foreground text-center mt-4 font-semibold">Insurance & Fees</div>
-            </div>
-
-            <div className="flex-shrink-0 w-96 flex items-center">
-              <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
-                <div className="text-center text-foreground">
-                  <div className="text-7xl font-bold text-red-400 mb-4">-4%</div>
-                  <div className="text-2xl font-semibold mb-4">Net Margin</div>
-                  <div className="text-lg text-muted-foreground border-t border-red-500/50 pt-4">
-                    41% of restaurants operate at a loss
-                  </div>
+                {/* Grid percentage markers */}
+                <div className="absolute top-0 -left-16 bottom-0 flex flex-col justify-between text-sm text-muted-foreground font-mono py-4">
+                  <span>100%</span>
+                  <span>75%</span>
+                  <span>50%</span>
+                  <span>25%</span>
+                  <span>0%</span>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          <div className="text-center mt-8">
-            <p className="text-muted-foreground text-sm">Scroll to see the breakdown</p>
-          </div>
+          {/* Negative Margin Zoom */}
+          <motion.div
+            style={{ opacity: marginOpacity, scale: marginScale }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <div className="w-full max-w-4xl">
+              <motion.div
+                initial={{ rotateX: 45 }}
+                whileInView={{ rotateX: 0 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.8 }}
+                className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-3xl p-12 shadow-2xl"
+                style={{ perspective: "1000px" }}
+              >
+                <div className="text-center space-y-6">
+                  <div>
+                    <div className="text-2xl font-semibold text-muted-foreground mb-2">
+                      Net Margin
+                    </div>
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.05, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="text-9xl font-bold text-red-500"
+                    >
+                      <AnimatedNumber value={-4} suffix="%" />
+                    </motion.div>
+                  </div>
+
+                  <div className="border-t-2 border-red-500/30 pt-6">
+                    <div className="text-xl text-foreground mb-4 font-semibold">
+                      The Unsustainable Reality
+                    </div>
+                    <div className="grid grid-cols-2 gap-6 text-left">
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <div className="text-4xl font-bold text-red-500 mb-2">
+                          <AnimatedNumber value={41} suffix="%" />
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          of B.C. restaurants operate at a loss or break even
+                        </div>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <div className="text-4xl font-bold text-red-500 mb-2">
+                          <AnimatedNumber value={1200} suffix="+" />
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          restaurants closed in Vancouver (2015-2025)
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="text-lg text-muted-foreground italic"
+                  >
+                    "When costs exceed revenue, there is no path to sustainability"
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>

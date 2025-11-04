@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 
 interface LinkPreviewProps {
   url: string;
@@ -13,12 +14,16 @@ interface LinkPreviewProps {
     domain: string;
     image?: string;
   };
+  className?: string;
+  inline?: boolean;
 }
 
 export const LinkPreview: React.FC<LinkPreviewProps> = ({
   url,
   children,
   preview,
+  className = "",
+  inline = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0 });
@@ -38,22 +43,18 @@ export const LinkPreview: React.FC<LinkPreviewProps> = ({
   };
 
   return (
-    <div
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
       ref={containerRef}
-      className="relative block w-full"
+      className={`relative ${inline ? 'inline-block' : 'block w-full'} no-underline ${className}`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
       onMouseMove={handleMouseMove}
     >
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block w-full"
-      >
-        {children}
-      </a>
-
+      {children}
+      
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -111,10 +112,15 @@ export const LinkPreview: React.FC<LinkPreviewProps> = ({
                 
                 {/* Domain Badge */}
                 <div className="flex items-center gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-700">
-                  <div className="w-5 h-5 rounded bg-blue-500 flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-white">
-                      {preview.domain.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="w-5 h-5 rounded flex items-center justify-center overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                    <Image
+                      src={`https://www.google.com/s2/favicons?domain=${preview.domain}&sz=128`}
+                      alt={`${preview.domain} favicon`}
+                      width={16}
+                      height={16}
+                      className="rounded-sm"
+                      unoptimized
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-medium text-zinc-900 dark:text-zinc-100 truncate">
@@ -132,7 +138,7 @@ export const LinkPreview: React.FC<LinkPreviewProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </a>
   );
 };
 

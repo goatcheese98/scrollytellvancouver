@@ -51,12 +51,12 @@
     <!-- Item 26 - Hu Tieu Bo Kho -->
     <text x="35" y="595" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">26. Hu Tieu Bo Kho</text>
     <text x="615" y="595" text-anchor="end" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a">$8.50</text>
-    <text x="50" y="617" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#333333">Vietnamese Beef Stew Noodle Soup</text>
+    <text x="50" y="617" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#333333">Vietnamese Beef Stew Served with Rice Noodles</text>
     
-    <!-- Item 27 - Hu Tieu Do Bien Kho/Nuoc -->
-    <text x="35" y="657" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">27. Hu Tieu Do Bien Kho/Nuoc</text>
+    <!-- Item 27 - Hu Tieu Do Bien -->
+    <text x="35" y="657" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">27. Hu Tieu Do Bien</text>
     <text x="615" y="657" text-anchor="end" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a">$8.50</text>
-    <text x="50" y="679" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#333333">Seafood Noodle in Soup or Soup on the Side (Chicken Broth)</text>
+    <text x="50" y="679" font-family="Arial, sans-serif" font-size="14" font-weight="400" fill="#333333">Seafood Noodle Soup with Rice Noodles</text>
   </g>
   
   <!-- Source attribution -->
