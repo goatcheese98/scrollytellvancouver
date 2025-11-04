@@ -66,7 +66,7 @@ export default function Scene2() {
                       initial={{ scale: 0.9 }}
                       whileInView={{ scale: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="bg-gradient-to-br from-red-500/10 to-red-600/5 border-2 border-red-500/20 rounded-xl p-6"
+                      className="border border-red-500/30 rounded-xl p-6 bg-card"
                     >
                       <div className="text-4xl font-bold text-red-500 mb-2">
                         <AnimatedNumber value={11} prefix="-" suffix="%" />
@@ -79,7 +79,7 @@ export default function Scene2() {
                       initial={{ scale: 0.9 }}
                       whileInView={{ scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.1 }}
-                      className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-2 border-green-500/20 rounded-xl p-6"
+                      className="border border-green-500/30 rounded-xl p-6 bg-card"
                     >
                       <div className="text-4xl font-bold text-green-500 mb-2">
                         <AnimatedNumber value={7.6} prefix="+" suffix="%" />
@@ -92,7 +92,7 @@ export default function Scene2() {
                       initial={{ scale: 0.9 }}
                       whileInView={{ scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="bg-gradient-to-br from-orange-500/10 to-orange-600/5 border-2 border-orange-500/20 rounded-xl p-6"
+                      className="border border-orange-500/30 rounded-xl p-6 bg-card"
                     >
                       <div className="text-4xl font-bold text-orange-500 mb-2">
                         <AnimatedNumber value={81} suffix="%" />
@@ -105,7 +105,7 @@ export default function Scene2() {
                       initial={{ scale: 0.9 }}
                       whileInView={{ scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-2 border-blue-500/20 rounded-xl p-6"
+                      className="border border-blue-500/30 rounded-xl p-6 bg-card"
                     >
                       <div className="text-4xl font-bold text-blue-500 mb-2">
                         <AnimatedNumber value={65} suffix="%" />

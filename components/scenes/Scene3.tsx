@@ -84,13 +84,6 @@ const GridSquare = ({ square, scrollProgress, index }: GridSquareProps) => {
     [0, 1]
   );
 
-  // Overflow squares transition from purple to red
-  const overflowColorTransition = useTransform(
-    scrollProgress,
-    [0.66, 0.7],
-    [0, 1]
-  );
-
   const isRevenue = square.category === 'revenue';
 
   return (
@@ -167,14 +160,12 @@ export default function Scene3() {
   // Grid container shift when overflow appears (includes border)
   const gridContainerX = useTransform(scrollYProgress, [0.64, 0.68], [0, -60]); // Shift entire container left
 
-  // Overflow emphasis - zoom effect focusing on the overflow area on bottom row (no tilt, just zoom)
-  const gridScale = useTransform(scrollYProgress, [0.72, 0.8], [1, 4.5]);
-  const gridX = useTransform(scrollYProgress, [0.72, 0.8], [0, 320]); // Pan right to overflow squares
-  const gridY = useTransform(scrollYProgress, [0.72, 0.8], [0, 320]); // Pan down to bottom row
+  // Lateral scroll - push entire grid further left to transition to final scene
+  const lateralScrollX = useTransform(scrollYProgress, [0.75, 0.85], [0, -1200]); // Push grid left off screen
 
-  // Negative margin zoom
-  const marginOpacity = useTransform(scrollYProgress, [0.8, 0.87, 0.95, 1], [0, 1, 1, 1]);
-  const marginScale = useTransform(scrollYProgress, [0.8, 0.87], [0.5, 1]);
+  // Negative margin scene - slides in from right and stops at center (starts after overflow animation)
+  const marginSlideX = useTransform(scrollYProgress, [0.75, 0.85], [1200, 0]); // Slide in from right, stop at center
+  const marginOpacity = useTransform(scrollYProgress, [0.74, 0.75], [0, 1]); // Appear right before slide-in starts
 
   const squares = generateSquares();
 
@@ -183,7 +174,7 @@ export default function Scene3() {
       ref={sectionRef}
       className="relative h-[600vh] bg-background"
     >
-      <div className="sticky top-0 h-screen flex items-center overflow-hidden" style={{ perspective: '2000px' }}>
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="container mx-auto max-w-7xl px-6">
 
           {/* Title Section */}
@@ -191,23 +182,29 @@ export default function Scene3() {
             style={{ opacity: titleOpacity, y: titleY }}
             className="absolute inset-0 flex flex-col items-center justify-center"
           >
-            <h2 className="text-6xl font-bold text-foreground mb-6 text-center">
+            <h2 className="text-7xl font-bold text-foreground mb-8 text-center">
               The Impossible Math
             </h2>
-            <TextGenerateEffect
-              words="Watch as costs progressively consume 100% of revenue—then overflow into unsustainable territory."
-              className="text-2xl text-muted-foreground text-center max-w-4xl"
-              duration={0.5}
-            />
+            <div className="max-w-5xl space-y-6">
+              <TextGenerateEffect
+                words="The grid below represents 100% of a restaurant's revenue. Each square is 1% of total income."
+                className="text-2xl text-foreground text-center font-semibold"
+                duration={0.5}
+              />
+              <TextGenerateEffect
+                words="Watch as costs progressively fill the grid—consuming all revenue, then overflowing into unsustainable territory."
+                className="text-xl text-muted-foreground text-center"
+                duration={0.5}
+                delay={2.5}
+              />
+            </div>
           </motion.div>
 
           {/* Grid Visualization */}
           <motion.div
             style={{
               opacity: gridOpacity,
-              scale: gridScale,
-              x: gridX,
-              y: gridY,
+              x: lateralScrollX,
             }}
             className="absolute inset-0 flex items-center justify-center"
           >
@@ -215,9 +212,14 @@ export default function Scene3() {
               style={{ x: gridContainerX }}
               className="w-full max-w-4xl relative"
             >
-              <h3 className="text-3xl font-bold text-foreground mb-8 text-center">
-                Restaurant Cost Breakdown (2025)
-              </h3>
+              <div className="mb-8 text-center space-y-2">
+                <h3 className="text-5xl font-bold text-foreground">
+                  Restaurant Cost Breakdown (2025)
+                </h3>
+                <p className="text-xl text-muted-foreground">
+                  100 squares = 100% of revenue
+                </p>
+              </div>
 
               {/* Total Costs Label */}
               <motion.div
@@ -290,10 +292,13 @@ export default function Scene3() {
                   {/* Revenue Label */}
                   <motion.div
                     style={{ opacity: revenueOpacity }}
-                    className="absolute top-4 left-4 z-10 bg-emerald-600 text-white px-3 py-1 rounded-lg shadow-lg"
+                    className="absolute top-4 left-4 z-10 bg-background/90 backdrop-blur-sm border-2 border-emerald-600 text-foreground px-3 py-1 rounded-lg shadow-lg"
                   >
-                    <div className="text-xs font-bold">REVENUE</div>
-                    <div className="text-2xl font-bold">100%</div>
+                    <div className="text-xs font-bold text-emerald-600">REVENUE</div>
+                    <div className="text-2xl font-bold flex items-center gap-1">
+                      <span>💵</span>
+                      <span>100%</span>
+                    </div>
                   </motion.div>
 
                   {/* In-Grid Category Labels (appear when category completes) */}
@@ -357,6 +362,28 @@ export default function Scene3() {
                     </div>
                   </div>
 
+                  {/* Flow arrow from "other" to overflow */}
+                  <motion.div
+                    style={{
+                      opacity: useTransform(scrollYProgress, [0.62, 0.65, 0.68, 0.7], [0, 1, 1, 0])
+                    }}
+                    className="absolute bottom-[5%] right-[2%] z-20"
+                  >
+                    <motion.div
+                      animate={{
+                        x: [0, 10, 0],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="text-5xl text-purple-500"
+                    >
+                      →
+                    </motion.div>
+                  </motion.div>
+
                   {/* Overflow label - positioned at the overflow squares on bottom row */}
                   <motion.div
                     style={{
@@ -384,20 +411,13 @@ export default function Scene3() {
             </motion.div>
           </motion.div>
 
-          {/* Negative Margin Zoom */}
+          {/* Negative Margin Scene - slides in from right */}
           <motion.div
-            style={{ opacity: marginOpacity, scale: marginScale }}
+            style={{ x: marginSlideX, opacity: marginOpacity }}
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="w-full max-w-4xl">
-              <motion.div
-                initial={{ rotateX: 45 }}
-                whileInView={{ rotateX: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.8 }}
-                className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-3xl p-12 shadow-2xl"
-                style={{ perspective: "1000px" }}
-              >
+              <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-3xl p-12 shadow-2xl">
                 <div className="text-center space-y-6">
                   <div>
                     <div className="text-2xl font-semibold text-muted-foreground mb-2">
@@ -442,17 +462,11 @@ export default function Scene3() {
                     </div>
                   </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="text-lg text-muted-foreground italic"
-                  >
+                  <div className="text-lg text-muted-foreground italic">
                     "When costs exceed revenue, there is no path to sustainability"
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
 
