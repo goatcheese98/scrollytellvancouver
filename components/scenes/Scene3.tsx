@@ -168,7 +168,6 @@ export default function Scene3() {
   const marginSlideX = useTransform(scrollYProgress, [0.75, 0.92], [1200, 0]); // Slide in from right, stop at center - SLOWER
   const marginOpacity = useTransform(scrollYProgress, [0.74, 0.75], [0, 1]); // Appear right before slide-in starts
   const costSummaryOpacity = useTransform(scrollYProgress, [0.72, 0.76], [0, 1]);
-  const costSummaryX = useTransform(scrollYProgress, [0.75, 0.92], [0, -360]);
 
   const squares = generateSquares();
 
@@ -428,8 +427,8 @@ export default function Scene3() {
           </motion.div>
 
           <motion.div
-            style={{ opacity: costSummaryOpacity, x: costSummaryX }}
-            className="relative mt-6 ml-16 rounded-3xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-6 py-5 text-center shadow-lg shadow-red-500/20 backdrop-blur"
+            style={{ opacity: costSummaryOpacity }}
+            className="relative -mt-8 ml-20 rounded-3xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-6 py-5 text-center shadow-lg shadow-red-500/20 backdrop-blur"
           >
             <div className="text-xs font-semibold tracking-[0.35em] uppercase text-red-600">
               Total Costs
