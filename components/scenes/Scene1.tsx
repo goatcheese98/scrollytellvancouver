@@ -41,7 +41,7 @@ export default function Scene1() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             {/* Left Side - Dynamic Content */}
-            <div className="relative h-[600px]">
+            <div className="relative h-[600px] pointer-events-none">
 
               {/* Title - Appears first, fades out */}
               <motion.div
@@ -199,7 +199,7 @@ export default function Scene1() {
             </div>
 
             {/* Right Side - Menu Comparison (Always Visible) */}
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center relative z-10 pointer-events-auto">
               <div className="w-full max-w-[720px]">
                 <CompareDemo />
               </div>
