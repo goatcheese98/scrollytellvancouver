@@ -162,20 +162,20 @@ export default function Scene3() {
   const gridContainerX = useTransform(scrollYProgress, [0.64, 0.68], [0, -60]); // Shift entire container left
 
   // Lateral scroll - push entire grid further left to transition to final scene
-  const lateralScrollX = useTransform(scrollYProgress, [0.84, 0.96], [0, -1200]); // Push grid left off screen
+  const lateralScrollX = useTransform(scrollYProgress, [0.75, 0.92], [0, -1200]); // Push grid left off screen - SLOWER
 
   // Negative margin scene - slides in from right and stops at center (starts after overflow animation)
-  const marginSlideX = useTransform(scrollYProgress, [0.84, 0.96], [1200, 0]); // Slide in from right, stop at center
-  const marginOpacity = useTransform(scrollYProgress, [0.83, 0.84], [0, 1]); // Appear right before slide-in starts
-  const costSummaryOpacity = useTransform(scrollYProgress, [0.8, 0.84], [0, 1]);
-  const costSummaryX = useTransform(scrollYProgress, [0.84, 0.96], [0, -360]);
+  const marginSlideX = useTransform(scrollYProgress, [0.75, 0.92], [1200, 0]); // Slide in from right, stop at center - SLOWER
+  const marginOpacity = useTransform(scrollYProgress, [0.74, 0.75], [0, 1]); // Appear right before slide-in starts
+  const costSummaryOpacity = useTransform(scrollYProgress, [0.72, 0.76], [0, 1]);
+  const costSummaryX = useTransform(scrollYProgress, [0.75, 0.92], [0, -360]);
 
   const squares = generateSquares();
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-[600vh] bg-background"
+      className="relative h-[1000vh] bg-background"
     >
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="container mx-auto max-w-7xl px-6">
