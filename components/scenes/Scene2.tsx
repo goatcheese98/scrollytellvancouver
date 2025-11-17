@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { AnimatedNumber } from '@/components/ui/animated-number';
+import { CompactSource } from '@/components/ui/compact-source';
 
 export default function Scene2() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -13,17 +14,21 @@ export default function Scene2() {
     offset: ["start start", "end start"]
   });
 
+  // Price increase stats section (first)
+  const priceStatsOpacity = useTransform(scrollYProgress, [0, 0.05, 0.2, 0.25], [1, 1, 1, 0]);
+  const priceStatsY = useTransform(scrollYProgress, [0, 0.25], [0, -100]);
+
   // Title section
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.1, 0.25, 0.35], [1, 1, 1, 0]);
-  const titleY = useTransform(scrollYProgress, [0, 0.35], [0, -100]);
+  const titleOpacity = useTransform(scrollYProgress, [0.2, 0.25, 0.4, 0.5], [0, 1, 1, 0]);
+  const titleY = useTransform(scrollYProgress, [0.2, 0.25, 0.4, 0.5], [50, 0, 0, -100]);
 
   // Stats section
-  const statsOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.6, 0.7], [0, 1, 1, 0]);
-  const statsY = useTransform(scrollYProgress, [0.3, 0.4], [50, 0]);
+  const statsOpacity = useTransform(scrollYProgress, [0.45, 0.55, 0.75, 0.85], [0, 1, 1, 0]);
+  const statsY = useTransform(scrollYProgress, [0.45, 0.55], [50, 0]);
 
   // Quote section
-  const quoteOpacity = useTransform(scrollYProgress, [0.65, 0.75, 0.85, 0.95], [0, 1, 1, 0]);
-  const quoteY = useTransform(scrollYProgress, [0.65, 0.75], [50, 0]);
+  const quoteOpacity = useTransform(scrollYProgress, [0.8, 0.85, 0.95, 1], [0, 1, 1, 0]);
+  const quoteY = useTransform(scrollYProgress, [0.8, 0.85], [50, 0]);
 
   return (
     <section
@@ -36,6 +41,80 @@ export default function Scene2() {
 
             {/* Left Side - Dynamic Content */}
             <div className="relative h-[600px]">
+
+              {/* Price Increase Stats - First Section */}
+              <motion.div
+                style={{ opacity: priceStatsOpacity, y: priceStatsY }}
+                className="absolute inset-0 flex flex-col justify-center"
+              >
+                <div className="space-y-8">
+                  {/* 4 stat boxes */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border space-y-2">
+                      <p className="text-2xl font-bold text-foreground">1,200+</p>
+                      <p className="text-xs text-muted-foreground">Restaurants closed</p>
+                      <div className="flex justify-center pt-2">
+                        <CompactSource
+                          url="https://nomsmagazine.com/longtime-vancouver-restaurants-close-2025/"
+                          domain="nomsmagazine.com"
+                          title="15 Longtime Vancouver Restaurants Locals Lost in 2025"
+                          description="Beloved legacy businesses closing in 2025 including Zefferelli's (36 years), Ma Dang Goul (30 years), Solly's Bagels, and many more mid-market restaurants."
+                          label="Noms Magazine"
+                        />
+                      </div>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border space-y-2">
+                      <p className="text-2xl font-bold text-foreground">1/week</p>
+                      <p className="text-xs text-muted-foreground">Current closure rate</p>
+                      <div className="flex justify-center pt-2">
+                        <CompactSource
+                          url="https://do604.com/p/rip-vancouver-2025"
+                          domain="do604.com"
+                          title="R.I.P Vancouver 2025 - Restaurant Closures Tracker"
+                          description="Ongoing documentation of restaurant closures across Vancouver in 2025, showing the accelerating pace of beloved establishments shutting down."
+                          label="Do604"
+                        />
+                      </div>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border space-y-2">
+                      <p className="text-2xl font-bold text-foreground">75%</p>
+                      <p className="text-xs text-muted-foreground">Eating out less</p>
+                      <div className="flex justify-center pt-2">
+                        <CompactSource
+                          url="https://vancouver.citynews.ca/2025/09/22/restaurants-struggle-as-more-canadians-look-for-value-dine-out-less-report/"
+                          domain="citynews.ca"
+                          title="Restaurants struggle as more Canadians look for value, dine out less"
+                          description="September 2025 Restaurants Canada report found that three in four Canadians (75%) are eating out less, citing the high cost of living as the main reason."
+                          label="CityNews"
+                        />
+                      </div>
+                    </div>
+                    <div className="text-center p-4 rounded-lg bg-card/50 border border-border space-y-2">
+                      <p className="text-2xl font-bold text-foreground">41%</p>
+                      <p className="text-xs text-muted-foreground">Unprofitable</p>
+                      <div className="flex justify-center pt-2">
+                        <CompactSource
+                          url="https://vancouver.citynews.ca/2025/09/22/restaurants-struggle-as-more-canadians-look-for-value-dine-out-less-report/"
+                          domain="citynews.ca"
+                          title="41% of B.C. restaurants operating at a loss or break-even"
+                          description="As of June 2025, 41% of B.C. restaurants were operating at a loss or merely breaking even, despite raising prices to cover costs."
+                          label="CityNews"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* +100% Price increase */}
+                  <div className="text-center space-y-2">
+                    <p className="text-7xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-red-600 bg-clip-text text-transparent leading-none">
+                      +100%
+                    </p>
+                    <p className="text-lg text-muted-foreground font-medium">
+                      Price increase in 10 years
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
 
               {/* Title and Context */}
               <motion.div
