@@ -48,7 +48,7 @@ export default function Scene2() {
                 <TextGenerateEffect
                   words="Three in four Canadians are eating out less, with young diners aged 18-34 hit the hardest. The result? A fundamental shift in dining behavior."
                   className="text-xl text-muted-foreground"
-                  duration={0.5}
+                  duration={0.25}
                 />
               </motion.div>
 

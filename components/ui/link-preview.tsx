@@ -27,18 +27,18 @@ export const LinkPreview: React.FC<LinkPreviewProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0 });
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLAnchorElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!containerRef.current) return;
-    
+
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const centerX = rect.width / 2;
-    
+
     // Calculate offset (-1 to 1 range)
     const offset = (x - centerX) / centerX;
-    
+
     setMousePosition({ x: offset * 60 }); // Max 60px offset in either direction
   };
 

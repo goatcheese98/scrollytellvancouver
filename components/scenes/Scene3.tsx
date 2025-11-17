@@ -191,13 +191,13 @@ export default function Scene3() {
               <TextGenerateEffect
                 words="The grid below represents 100% of a restaurant's revenue. Each square is 1% of total income."
                 className="text-2xl text-foreground text-center font-semibold"
-                duration={0.5}
+                duration={0.25}
               />
               <TextGenerateEffect
                 words="Watch as costs progressively fill the grid—consuming all revenue, then overflowing into unsustainable territory."
                 className="text-xl text-muted-foreground text-center"
-                duration={0.5}
-                delay={2.5}
+                duration={0.25}
+                delay={1.25}
               />
             </div>
           </motion.div>
