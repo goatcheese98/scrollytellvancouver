@@ -17,13 +17,13 @@ export const TextGenerateEffect = ({
   delay?: number;
 }) => {
   const [scope, animate] = useAnimate();
-  const isInView = useInView(scope, { once: false, margin: "-100px" });
+  const isInView = useInView(scope, { once: true, margin: "-100px" });
   const [hasAnimated, setHasAnimated] = useState(false);
 
   let wordsArray = words.split(" ");
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !hasAnimated) {
       setHasAnimated(true);
       animate(
         "span",
@@ -36,19 +36,6 @@ export const TextGenerateEffect = ({
           delay: stagger(0.1, { startDelay: delay }),
         }
       );
-    } else if (hasAnimated) {
-      // Reset animation when out of view
-      animate(
-        "span",
-        {
-          opacity: 0,
-          filter: filter ? "blur(10px)" : "none",
-        },
-        {
-          duration: 0,
-        }
-      );
-      setHasAnimated(false);
     }
   }, [isInView, hasAnimated, delay]);
 
