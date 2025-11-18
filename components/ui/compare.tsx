@@ -16,6 +16,7 @@ interface CompareProps {
   showHandlebar?: boolean;
   autoplay?: boolean;
   autoplayDuration?: number;
+  onSliderChange?: (percentage: number) => void;
 }
 export const Compare = ({
   firstImage = "",
@@ -28,6 +29,7 @@ export const Compare = ({
   showHandlebar = true,
   autoplay = false,
   autoplayDuration = 5000,
+  onSliderChange,
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
   const [isDragging, setIsDragging] = useState(false);
@@ -105,12 +107,14 @@ export const Compare = ({
         const rect = sliderRef.current.getBoundingClientRect();
         const x = clientX - rect.left;
         const percent = (x / rect.width) * 100;
+        const clampedPercent = Math.max(0, Math.min(100, percent));
         requestAnimationFrame(() => {
-          setSliderXPercent(Math.max(0, Math.min(100, percent)));
+          setSliderXPercent(clampedPercent);
+          onSliderChange?.(clampedPercent);
         });
       }
     },
-    [slideMode, isDragging]
+    [slideMode, isDragging, onSliderChange]
   );
 
   const handleMouseDown = useCallback(

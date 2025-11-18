@@ -3,6 +3,7 @@
 import React from "react";
 import { Compare } from "@/components/ui/compare";
 import { LinkPreview } from "@/components/ui/link-preview";
+import { CompactSource } from "@/components/ui/compact-source";
 import { ExternalLink, Calendar, TrendingUp } from "lucide-react";
 
 export const CompareDemo = () => {
@@ -13,18 +14,37 @@ export const CompareDemo = () => {
         <h3 className="text-xl font-semibold text-foreground tracking-tight">Pho Goodness, Vancouver</h3>
       </div>
 
-      {/* Compare Interface */}
-      <div className="p-3 border rounded-xl bg-card border-border w-full max-w-[660px] mx-auto">
-        <Compare
-          firstImage="/images/menu-2015.svg"
-          secondImage="/images/menu-2025.svg"
-          firstImageClassName="object-contain object-center"
-          secondImageClassname="object-contain object-center"
-          className="h-[560px] w-full md:h-[700px] md:w-full"
-          slideMode="hover"
-          showHandlebar={true}
-          autoplay={false}
-        />
+      {/* Compare Interface - Menu Card Style */}
+      <div className="relative p-6 rounded-2xl shadow-2xl w-full max-w-[660px] mx-auto border-4 border-amber-900/30 bg-amber-50/40">
+
+        {/* Menu card texture overlay */}
+        <div className="absolute inset-0 rounded-2xl bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDEzOSwgNjksIDkzLCAwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-60 pointer-events-none"></div>
+
+        {/* Hover prompt text at the top with glowing effect */}
+        <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-40">
+          <span className="text-xs font-semibold text-amber-900 pointer-events-none px-3 py-1.5 rounded-full bg-amber-100/40 backdrop-blur-sm border border-amber-900/20 shadow-lg shadow-amber-500/20 inline-block">
+            ✦ Move your cursor left & right to compare
+          </span>
+        </div>
+
+        {/* Decorative corner elements */}
+        <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-amber-900/30 rounded-tl-lg"></div>
+        <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-amber-900/30 rounded-tr-lg"></div>
+        <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-amber-900/30 rounded-bl-lg"></div>
+        <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-amber-900/30 rounded-br-lg"></div>
+
+        <div className="relative">
+          <Compare
+            firstImage="/images/menu-2015.svg"
+            secondImage="/images/menu-2025.svg"
+            firstImageClassName="object-contain object-center"
+            secondImageClassname="object-contain object-center"
+            className="h-[560px] w-full md:h-[700px] md:w-full rounded-lg"
+            slideMode="hover"
+            showHandlebar={true}
+            autoplay={false}
+          />
+        </div>
       </div>
 
       {/* Price Increase Indicator */}
