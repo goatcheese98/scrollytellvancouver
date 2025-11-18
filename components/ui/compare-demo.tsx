@@ -1,12 +1,92 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Compare } from "@/components/ui/compare";
 import { LinkPreview } from "@/components/ui/link-preview";
 import { CompactSource } from "@/components/ui/compact-source";
 import { ExternalLink, Calendar, TrendingUp } from "lucide-react";
 
 export const CompareDemo = () => {
+  const [showAutoplay, setShowAutoplay] = useState(true);
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [showGlow, setShowGlow] = useState(false);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const compareRef = React.useRef<HTMLDivElement>(null);
+
+  // Easing functions for natural momentum
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const easeInCubic = (t: number) => t * t * t;
+
+  useEffect(() => {
+    if (!showAutoplay || isUserInteracting) return;
+
+    const sequence = async () => {
+      // Phase 1: Start from 25% and move to 95% with ease-out (natural deceleration)
+      const startTime = Date.now();
+      const phase1Duration = 1600;
+
+      return new Promise<void>((resolve) => {
+        const phase1Interval = setInterval(() => {
+          // Stop animation if user starts interacting
+          if (isUserInteracting) {
+            clearInterval(phase1Interval);
+            resolve();
+            return;
+          }
+
+          const elapsed = Date.now() - startTime;
+          if (elapsed >= phase1Duration) {
+            setSliderPosition(95);
+            clearInterval(phase1Interval);
+
+            // Phase 2: Pause at 95% for 0.8 seconds
+            setTimeout(() => {
+              if (isUserInteracting) return;
+
+              // Phase 3: Move from 95% to 50% (center) with ease-in-out (natural acceleration and deceleration)
+              const phase3Start = Date.now();
+              const phase3Duration = 1600;
+
+              const phase3Interval = setInterval(() => {
+                if (isUserInteracting) {
+                  clearInterval(phase3Interval);
+                  return;
+                }
+
+                const elapsed = Date.now() - phase3Start;
+                const progress = Math.min(elapsed / phase3Duration, 1);
+
+                // Use ease-in-out for smooth acceleration and deceleration
+                let easedProgress = progress < 0.5
+                  ? 2 * progress * progress
+                  : -1 + (4 - 2 * progress) * progress;
+
+                const position = 95 + (50 - 95) * easedProgress;
+                setSliderPosition(position);
+
+                if (progress >= 1) {
+                  clearInterval(phase3Interval);
+                  setSliderPosition(50);
+                  setShowGlow(true);
+                  setShowAutoplay(false);
+                  resolve();
+                }
+              }, 16);
+            }, 800);
+          } else {
+            const progress = elapsed / phase1Duration;
+            // Apply ease-out cubic for natural deceleration on the outward motion
+            const easedProgress = easeOutCubic(progress);
+            const position = 25 + (95 - 25) * easedProgress;
+            setSliderPosition(position);
+          }
+        }, 16);
+      });
+    };
+
+    sequence();
+  }, [showAutoplay, isUserInteracting]);
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -22,7 +102,13 @@ export const CompareDemo = () => {
 
         {/* Hover prompt text at the top with glowing effect */}
         <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-40">
-          <span className="text-xs font-semibold text-amber-900 pointer-events-none px-3 py-1.5 rounded-full bg-amber-100/40 backdrop-blur-sm border border-amber-900/20 shadow-lg shadow-amber-500/20 inline-block">
+          <span
+            className={`text-xs font-semibold text-amber-900 pointer-events-none px-3 py-1.5 rounded-full bg-amber-100/40 backdrop-blur-sm border border-amber-900/20 shadow-lg inline-block transition-all duration-300 ${
+              showGlow
+                ? 'shadow-amber-400/80 bg-amber-100/70 border-amber-400/60'
+                : 'shadow-amber-500/20'
+            }`}
+          >
             ✦ Move your cursor left & right to compare
           </span>
         </div>
@@ -33,7 +119,14 @@ export const CompareDemo = () => {
         <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-amber-900/30 rounded-bl-lg"></div>
         <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-amber-900/30 rounded-br-lg"></div>
 
-        <div className="relative">
+        <div
+          className="relative"
+          ref={compareRef}
+          onMouseEnter={() => setIsUserInteracting(true)}
+          onMouseLeave={() => setIsUserInteracting(false)}
+          onTouchStart={() => setIsUserInteracting(true)}
+          onTouchEnd={() => setIsUserInteracting(false)}
+        >
           <Compare
             firstImage="/images/menu-2015.svg"
             secondImage="/images/menu-2025.svg"
@@ -43,6 +136,13 @@ export const CompareDemo = () => {
             slideMode="hover"
             showHandlebar={true}
             autoplay={false}
+            sliderPercentage={isUserInteracting ? undefined : sliderPosition}
+            initialSliderPercentage={50}
+            onSliderChange={(percent) => {
+              if (isUserInteracting) {
+                setSliderPosition(percent);
+              }
+            }}
           />
         </div>
       </div>

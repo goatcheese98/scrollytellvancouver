@@ -12,6 +12,7 @@ interface CompareProps {
   firstImageClassName?: string;
   secondImageClassname?: string;
   initialSliderPercentage?: number;
+  sliderPercentage?: number;
   slideMode?: "hover" | "drag";
   showHandlebar?: boolean;
   autoplay?: boolean;
@@ -25,6 +26,7 @@ export const Compare = ({
   firstImageClassName,
   secondImageClassname,
   initialSliderPercentage = 50,
+  sliderPercentage,
   slideMode = "hover",
   showHandlebar = true,
   autoplay = false,
@@ -33,6 +35,9 @@ export const Compare = ({
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Use controlled sliderPercentage if provided, otherwise use internal state
+  const currentSliderPercent = sliderPercentage !== undefined ? sliderPercentage : sliderXPercent;
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -76,7 +81,8 @@ export const Compare = ({
 
   function mouseLeaveHandler() {
     setIsMouseOver(false);
-    if (slideMode === "hover") {
+    // Only reset if not using controlled sliderPercentage
+    if (slideMode === "hover" && sliderPercentage === undefined) {
       setSliderXPercent(initialSliderPercentage);
     }
     if (slideMode === "drag") {
@@ -109,12 +115,15 @@ export const Compare = ({
         const percent = (x / rect.width) * 100;
         const clampedPercent = Math.max(0, Math.min(100, percent));
         requestAnimationFrame(() => {
-          setSliderXPercent(clampedPercent);
+          // Only update internal state if not using controlled sliderPercentage
+          if (sliderPercentage === undefined) {
+            setSliderXPercent(clampedPercent);
+          }
           onSliderChange?.(clampedPercent);
         });
       }
     },
-    [slideMode, isDragging, onSliderChange]
+    [slideMode, isDragging, onSliderChange, sliderPercentage]
   );
 
   const handleMouseDown = useCallback(
@@ -172,7 +181,7 @@ export const Compare = ({
         <motion.div
           className="h-full w-px absolute top-0 m-auto bg-gradient-to-b from-transparent from-[5%] to-[95%] via-primary to-transparent"
           style={{
-            left: `${sliderXPercent}%`,
+            left: `${currentSliderPercent}%`,
             top: "0",
             zIndex: 50,
           }}
@@ -209,7 +218,7 @@ export const Compare = ({
                 firstImageClassName
               )}
               style={{
-                clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
+                clipPath: `inset(0 ${100 - currentSliderPercent}% 0 0)`,
               }}
               transition={{ duration: 0 }}
             >

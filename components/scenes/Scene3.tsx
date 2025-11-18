@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { AnimatedNumber } from '@/components/ui/animated-number';
@@ -128,6 +128,19 @@ const GridSquare = ({ square, scrollProgress, index }: GridSquareProps) => {
 
 export default function Scene3() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // Scale based on viewport height: at 1000px height = 1.0 scale, smaller heights scale down
+      const newScale = Math.min(1, window.innerHeight / 1000);
+      setScale(newScale);
+    };
+
+    handleResize(); // Set initial scale
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -184,18 +197,18 @@ export default function Scene3() {
             style={{ opacity: titleOpacity, y: titleY }}
             className="absolute inset-0 flex flex-col items-center justify-center"
           >
-            <h2 className="text-7xl font-bold text-foreground mb-8 text-center">
+            <h2 className="text-5xl font-bold text-foreground mb-6 text-center">
               The Impossible Math
             </h2>
-            <div className="max-w-5xl space-y-6">
+            <div className="max-w-3xl space-y-4">
               <TextGenerateEffect
                 words="The grid below represents 100% of a restaurant's revenue. Each square is 1% of total income."
-                className="text-2xl text-foreground text-center font-semibold"
+                className="text-lg text-foreground text-center font-semibold"
                 duration={0.25}
               />
               <TextGenerateEffect
                 words="Watch as costs progressively fill the grid—consuming all revenue, then overflowing into unsustainable territory."
-                className="text-xl text-muted-foreground text-center"
+                className="text-base text-muted-foreground text-center"
                 duration={0.25}
                 delay={1.25}
               />
@@ -207,18 +220,19 @@ export default function Scene3() {
             style={{
               opacity: gridOpacity,
               x: lateralScrollX,
+              scale
             }}
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center origin-top"
           >
             <motion.div
               style={{ x: gridContainerX }}
               className="w-full max-w-4xl relative"
             >
-              <div className="mb-8 text-center space-y-2">
-                <h3 className="text-5xl font-bold text-foreground">
+              <div className="mb-6 text-center space-y-1">
+                <h3 className="text-3xl font-bold text-foreground">
                   Restaurant Cost Breakdown (2025)
                 </h3>
-                <p className="text-xl text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   100 squares = 100% of revenue
                 </p>
               </div>
@@ -226,7 +240,7 @@ export default function Scene3() {
               {/* Main Grid Container */}
               <div className="relative">
                 {/* Percentage scale */}
-                <div className="absolute -left-12 top-0 bottom-0 flex flex-col justify-between text-xs text-muted-foreground font-mono py-4">
+                <div className="absolute -left-10 top-0 bottom-0 flex flex-col justify-between text-[10px] text-muted-foreground font-mono py-3">
                   <span>100%</span>
                   <span>75%</span>
                   <span>50%</span>
@@ -235,19 +249,19 @@ export default function Scene3() {
                 </div>
 
                 {/* Bordered container that includes grid + overflow */}
-                <div className="relative rounded-3xl border-2 border-border/60 overflow-visible bg-gradient-to-br from-card/95 via-card to-card shadow-xl p-6">
+                <div className="relative rounded-2xl border-2 border-border/60 overflow-visible bg-gradient-to-br from-card/95 via-card to-card shadow-xl p-4">
                   {/* Revenue Label */}
                   <motion.div
                     style={{ opacity: revenueOpacity, scale: revenueScale, y: revenueY }}
                     className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
                   >
-                    <div className="pointer-events-auto bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-2xl rounded-3xl px-10 py-6 border border-emerald-400/60 backdrop-blur max-w-lg text-center">
-                      <div className="text-xs font-semibold tracking-[0.4em] uppercase text-white/80">
+                    <div className="pointer-events-auto bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-2xl rounded-2xl px-8 py-4 border border-emerald-400/60 backdrop-blur max-w-lg text-center">
+                      <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
                         Revenue Baseline
                       </div>
-                      <div className="mt-4 space-y-2">
-                        <div className="text-7xl font-bold leading-none">100%</div>
-                        <div className="text-sm font-medium text-white/85">
+                      <div className="mt-3 space-y-1">
+                        <div className="text-5xl font-bold leading-none">100%</div>
+                        <div className="text-xs font-medium text-white/85">
                           Total income before costs are applied
                         </div>
                       </div>
@@ -257,34 +271,34 @@ export default function Scene3() {
                   {/* In-Grid Category Labels (appear when category completes) */}
                   <motion.div
                     style={{ opacity: foodGridLabelOpacity }}
-                    className="absolute top-[25%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-rose-500/90 text-white px-4 py-2 rounded-lg shadow-lg z-10 pointer-events-none"
+                    className="absolute top-[25%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-rose-500/90 text-white px-3 py-1 rounded-lg shadow-lg z-10 pointer-events-none"
                   >
-                    <div className="text-xs font-bold">FOOD COSTS</div>
-                    <div className="text-2xl font-bold text-center">38%</div>
+                    <div className="text-[10px] font-bold">FOOD COSTS</div>
+                    <div className="text-lg font-bold text-center">38%</div>
                   </motion.div>
 
                   <motion.div
                     style={{ opacity: labourGridLabelOpacity }}
-                    className="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500/90 text-white px-4 py-2 rounded-lg shadow-lg z-10 pointer-events-none"
+                    className="absolute top-[56%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500/90 text-white px-3 py-1 rounded-lg shadow-lg z-10 pointer-events-none"
                   >
-                    <div className="text-xs font-bold">LABOUR</div>
-                    <div className="text-2xl font-bold text-center">38%</div>
+                    <div className="text-[10px] font-bold">LABOUR</div>
+                    <div className="text-lg font-bold text-center">38%</div>
                   </motion.div>
 
                   <motion.div
                     style={{ opacity: rentGridLabelOpacity }}
-                    className="absolute top-[78%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500/90 text-white px-4 py-2 rounded-lg shadow-lg z-10 pointer-events-none"
+                    className="absolute top-[78%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500/90 text-white px-3 py-1 rounded-lg shadow-lg z-10 pointer-events-none"
                   >
-                    <div className="text-xs font-bold">RENT</div>
-                    <div className="text-2xl font-bold text-center">18%</div>
+                    <div className="text-[10px] font-bold">RENT</div>
+                    <div className="text-lg font-bold text-center">18%</div>
                   </motion.div>
 
                   <motion.div
                     style={{ opacity: otherGridLabelOpacity }}
-                    className="absolute bottom-[5%] left-1/2 -translate-x-1/2 bg-purple-500/90 text-white px-3 py-1 rounded-lg shadow-lg z-10 pointer-events-none"
+                    className="absolute bottom-[5%] left-1/2 -translate-x-1/2 bg-purple-500/90 text-white px-2 py-0.5 rounded-lg shadow-lg z-10 pointer-events-none"
                   >
-                    <div className="text-xs font-bold">OTHER</div>
-                    <div className="text-xl font-bold text-center">10%</div>
+                    <div className="text-[10px] font-bold">OTHER</div>
+                    <div className="text-base font-bold text-center">10%</div>
                   </motion.div>
 
                   {/* Grid wrapper to hold 10x10 + overflow on same row */}
@@ -331,7 +345,7 @@ export default function Scene3() {
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
-                      className="text-5xl text-purple-500"
+                      className="text-3xl text-purple-500"
                     >
                       →
                     </motion.div>
@@ -342,7 +356,7 @@ export default function Scene3() {
                     style={{
                       opacity: useTransform(scrollYProgress, [0.68, 0.72], [0, 1])
                     }}
-                    className="absolute bottom-[5%] -right-32 bg-red-500 text-white px-3 py-2 rounded-lg shadow-lg z-20"
+                    className="absolute bottom-[5%] -right-24 bg-red-500 text-white px-2 py-1 rounded-lg shadow-lg z-20"
                   >
                     <motion.div
                       animate={{
@@ -355,8 +369,8 @@ export default function Scene3() {
                       }}
                       className="text-center"
                     >
-                      <div className="text-xs font-bold">OVERFLOW</div>
-                      <div className="text-2xl font-bold">+4%</div>
+                      <div className="text-[10px] font-bold">OVERFLOW</div>
+                      <div className="text-lg font-bold">+4%</div>
                     </motion.div>
                   </motion.div>
                 </div>
@@ -365,17 +379,17 @@ export default function Scene3() {
         </motion.div>
 
         {/* Category Legend & Total Costs */}
-        <div className="absolute top-20 right-32 w-60 pointer-events-none z-30">
+        <div className="absolute top-16 right-20 w-48 pointer-events-none z-30">
           <motion.div
             style={{ opacity: foodLabelOpacity }}
-            className="relative rounded-3xl bg-gradient-to-br from-rose-500 to-rose-600 text-white px-6 py-5 shadow-xl shadow-rose-500/25 backdrop-blur"
+            className="relative rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white px-4 py-3 shadow-xl shadow-rose-500/25 backdrop-blur"
           >
-            <div className="text-xs font-semibold tracking-[0.35em] uppercase text-white/80">
+            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
               {categoryLabels.food.name}
             </div>
-            <div className="mt-3 flex items-end justify-between">
-              <span className="text-3xl font-bold">{categoryLabels.food.percent}</span>
-              <span className="text-[11px] text-white/70 max-w-[140px] text-right">
+            <div className="mt-2 flex items-end justify-between">
+              <span className="text-2xl font-bold">{categoryLabels.food.percent}</span>
+              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
                 {categoryLabels.food.detail}
               </span>
             </div>
@@ -383,14 +397,14 @@ export default function Scene3() {
 
           <motion.div
             style={{ opacity: labourLabelOpacity }}
-            className="relative -mt-8 ml-6 rounded-3xl bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 py-5 shadow-xl shadow-orange-500/25 backdrop-blur"
+            className="relative -mt-6 ml-4 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white px-4 py-3 shadow-xl shadow-orange-500/25 backdrop-blur"
           >
-            <div className="text-xs font-semibold tracking-[0.35em] uppercase text-white/80">
+            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
               {categoryLabels.labour.name}
             </div>
-            <div className="mt-3 flex items-end justify-between">
-              <span className="text-3xl font-bold">{categoryLabels.labour.percent}</span>
-              <span className="text-[11px] text-white/70 max-w-[140px] text-right">
+            <div className="mt-2 flex items-end justify-between">
+              <span className="text-2xl font-bold">{categoryLabels.labour.percent}</span>
+              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
                 {categoryLabels.labour.detail}
               </span>
             </div>
@@ -398,14 +412,14 @@ export default function Scene3() {
 
           <motion.div
             style={{ opacity: rentLabelOpacity }}
-            className="relative -mt-8 ml-12 rounded-3xl bg-gradient-to-br from-amber-500 to-amber-600 text-white px-6 py-5 shadow-xl shadow-amber-500/25 backdrop-blur"
+            className="relative -mt-6 ml-8 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-3 shadow-xl shadow-amber-500/25 backdrop-blur"
           >
-            <div className="text-xs font-semibold tracking-[0.35em] uppercase text-white/80">
+            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
               {categoryLabels.rent.name}
             </div>
-            <div className="mt-3 flex items-end justify-between">
-              <span className="text-3xl font-bold">{categoryLabels.rent.percent}</span>
-              <span className="text-[11px] text-white/70 max-w-[140px] text-right">
+            <div className="mt-2 flex items-end justify-between">
+              <span className="text-2xl font-bold">{categoryLabels.rent.percent}</span>
+              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
                 {categoryLabels.rent.detail}
               </span>
             </div>
@@ -413,14 +427,14 @@ export default function Scene3() {
 
           <motion.div
             style={{ opacity: otherLabelOpacity }}
-            className="relative -mt-8 ml-16 rounded-3xl bg-gradient-to-br from-purple-500 to-purple-600 text-white px-6 py-5 shadow-xl shadow-purple-500/25 backdrop-blur"
+            className="relative -mt-6 ml-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white px-4 py-3 shadow-xl shadow-purple-500/25 backdrop-blur"
           >
-            <div className="text-xs font-semibold tracking-[0.35em] uppercase text-white/80">
+            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
               {categoryLabels.other.name}
             </div>
-            <div className="mt-3 flex items-end justify-between">
-              <span className="text-3xl font-bold">{categoryLabels.other.percent}</span>
-              <span className="text-[11px] text-white/70 max-w-[140px] text-right">
+            <div className="mt-2 flex items-end justify-between">
+              <span className="text-2xl font-bold">{categoryLabels.other.percent}</span>
+              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
                 {categoryLabels.other.detail}
               </span>
             </div>
@@ -428,15 +442,15 @@ export default function Scene3() {
 
           <motion.div
             style={{ opacity: costSummaryOpacity }}
-            className="relative -mt-8 ml-20 rounded-3xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-6 py-5 text-center shadow-lg shadow-red-500/20 backdrop-blur"
+            className="relative -mt-6 ml-16 rounded-2xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-4 py-3 text-center shadow-lg shadow-red-500/20 backdrop-blur"
           >
-            <div className="text-xs font-semibold tracking-[0.35em] uppercase text-red-600">
+            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-red-600">
               Total Costs
             </div>
-            <div className="mt-4 text-4xl font-bold text-red-500">
+            <div className="mt-3 text-3xl font-bold text-red-500">
               <AnimatedNumber value={104} suffix="%" />
             </div>
-            <div className="mt-1 text-xs text-red-900/70">
+            <div className="mt-1 text-[9px] text-red-900/70">
               Exceeds revenue by 4%
             </div>
           </motion.div>
@@ -447,11 +461,11 @@ export default function Scene3() {
           style={{ x: marginSlideX, opacity: marginOpacity }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="w-full max-w-4xl">
-              <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-3xl p-12 shadow-2xl">
-                <div className="text-center space-y-6">
+            <div className="w-full max-w-3xl">
+              <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-2xl p-8 shadow-2xl">
+                <div className="text-center space-y-5">
                   <div>
-                    <div className="text-2xl font-semibold text-muted-foreground mb-2">
+                    <div className="text-lg font-semibold text-muted-foreground mb-2">
                       Net Margin
                     </div>
                     <motion.div
@@ -463,37 +477,37 @@ export default function Scene3() {
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
-                      className="text-9xl font-bold text-red-500"
+                      className="text-7xl font-bold text-red-500"
                     >
                       <AnimatedNumber value={-4} suffix="%" />
                     </motion.div>
                   </div>
 
-                  <div className="border-t-2 border-red-500/30 pt-6">
-                    <div className="text-xl text-foreground mb-4 font-semibold">
+                  <div className="border-t-2 border-red-500/30 pt-5">
+                    <div className="text-base text-foreground mb-3 font-semibold">
                       The Unsustainable Reality
                     </div>
-                    <div className="grid grid-cols-2 gap-6 text-left">
-                      <div className="bg-background/50 rounded-lg p-4">
-                        <div className="text-4xl font-bold text-red-500 mb-2">
+                    <div className="grid grid-cols-2 gap-4 text-left">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <div className="text-3xl font-bold text-red-500 mb-1">
                           <AnimatedNumber value={41} suffix="%" />
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-muted-foreground">
                           of B.C. restaurants operate at a loss or break even
                         </div>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-4">
-                        <div className="text-4xl font-bold text-red-500 mb-2">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <div className="text-3xl font-bold text-red-500 mb-1">
                           <AnimatedNumber value={1200} suffix="+" />
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-muted-foreground">
                           restaurants closed in Vancouver (2015-2025)
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-lg text-muted-foreground italic">
+                  <div className="text-sm text-muted-foreground italic">
                     &ldquo;When costs exceed revenue, there is no path to sustainability&rdquo;
                   </div>
                 </div>
