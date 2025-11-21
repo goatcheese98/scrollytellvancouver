@@ -3,7 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-export const TracingBeam = ({ children }: { children: React.ReactNode }) => {
+import { cn } from '@/lib/utils';
+
+export const TracingBeam = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svgHeight, setSvgHeight] = useState(0);
 
@@ -21,7 +23,7 @@ export const TracingBeam = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} className={cn("relative w-full", className)}>
       {/* SVG Line */}
       <svg
         viewBox={`0 0 20 ${svgHeight}`}
