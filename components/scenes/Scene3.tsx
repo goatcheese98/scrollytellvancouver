@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 import { AnimatedNumber } from '@/components/ui/animated-number';
 
+
 // Define cost categories and their ranges
 type CostCategory = 'revenue' | 'food' | 'labour' | 'rent' | 'other' | 'overflow';
 
@@ -175,12 +176,18 @@ export default function Scene3() {
   const gridContainerX = useTransform(scrollYProgress, [0.64, 0.68], [0, -60]); // Shift entire container left
 
   // Lateral scroll - push entire grid further left to transition to final scene
-  const lateralScrollX = useTransform(scrollYProgress, [0.75, 0.92], [0, -1200]); // Push grid left off screen - SLOWER
+  const lateralScrollX = useTransform(scrollYProgress, [0.75, 0.85], [0, -1200]); // Push grid left off screen - FASTER
 
   // Negative margin scene - slides in from right and stops at center (starts after overflow animation)
-  const marginSlideX = useTransform(scrollYProgress, [0.75, 0.92], [1200, 0]); // Slide in from right, stop at center - SLOWER
+  const marginSlideX = useTransform(scrollYProgress, [0.75, 0.85], [1200, 0]); // Slide in from right, stop at center - FASTER
   const marginOpacity = useTransform(scrollYProgress, [0.74, 0.75], [0, 1]); // Appear right before slide-in starts
   const costSummaryOpacity = useTransform(scrollYProgress, [0.72, 0.76], [0, 1]);
+
+  // Highlight progress based on scroll AFTER the card is centered (0.85 to 0.98)
+  const highlight1 = useTransform(scrollYProgress, [0.86, 0.88], [0, 1]);
+  const highlight2 = useTransform(scrollYProgress, [0.89, 0.91], [0, 1]);
+  const highlight3 = useTransform(scrollYProgress, [0.92, 0.94], [0, 1]);
+  const highlight4 = useTransform(scrollYProgress, [0.95, 0.97], [0, 1]);
 
   const squares = generateSquares();
 
@@ -375,141 +382,198 @@ export default function Scene3() {
                   </motion.div>
                 </div>
               </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
 
-        {/* Category Legend & Total Costs */}
-        <div className="absolute top-16 right-20 w-48 pointer-events-none z-30">
+          {/* Category Legend & Total Costs */}
+          <div className="absolute top-16 right-20 w-48 pointer-events-none z-30">
+            <motion.div
+              style={{ opacity: foodLabelOpacity }}
+              className="relative rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white px-4 py-3 shadow-xl shadow-rose-500/25 backdrop-blur"
+            >
+              <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
+                {categoryLabels.food.name}
+              </div>
+              <div className="mt-2 flex items-end justify-between">
+                <span className="text-2xl font-bold">{categoryLabels.food.percent}</span>
+                <span className="text-[9px] text-white/70 max-w-[100px] text-right">
+                  {categoryLabels.food.detail}
+                </span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ opacity: labourLabelOpacity }}
+              className="relative -mt-6 ml-4 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white px-4 py-3 shadow-xl shadow-orange-500/25 backdrop-blur"
+            >
+              <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
+                {categoryLabels.labour.name}
+              </div>
+              <div className="mt-2 flex items-end justify-between">
+                <span className="text-2xl font-bold">{categoryLabels.labour.percent}</span>
+                <span className="text-[9px] text-white/70 max-w-[100px] text-right">
+                  {categoryLabels.labour.detail}
+                </span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ opacity: rentLabelOpacity }}
+              className="relative -mt-6 ml-8 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-3 shadow-xl shadow-amber-500/25 backdrop-blur"
+            >
+              <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
+                {categoryLabels.rent.name}
+              </div>
+              <div className="mt-2 flex items-end justify-between">
+                <span className="text-2xl font-bold">{categoryLabels.rent.percent}</span>
+                <span className="text-[9px] text-white/70 max-w-[100px] text-right">
+                  {categoryLabels.rent.detail}
+                </span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ opacity: otherLabelOpacity }}
+              className="relative -mt-6 ml-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white px-4 py-3 shadow-xl shadow-purple-500/25 backdrop-blur"
+            >
+              <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
+                {categoryLabels.other.name}
+              </div>
+              <div className="mt-2 flex items-end justify-between">
+                <span className="text-2xl font-bold">{categoryLabels.other.percent}</span>
+                <span className="text-[9px] text-white/70 max-w-[100px] text-right">
+                  {categoryLabels.other.detail}
+                </span>
+              </div>
+            </motion.div>
+
+            <motion.div
+              style={{ opacity: costSummaryOpacity }}
+              className="relative -mt-6 ml-16 rounded-2xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-4 py-3 text-center shadow-lg shadow-red-500/20 backdrop-blur"
+            >
+              <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-red-600">
+                Total Costs
+              </div>
+              <div className="mt-3 text-3xl font-bold text-red-500">
+                <AnimatedNumber value={104} suffix="%" />
+              </div>
+              <div className="mt-1 text-[9px] text-red-900/70">
+                Exceeds revenue by 4%
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Negative Margin Scene - slides in from right */}
           <motion.div
-            style={{ opacity: foodLabelOpacity }}
-            className="relative rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 text-white px-4 py-3 shadow-xl shadow-rose-500/25 backdrop-blur"
-          >
-            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
-              {categoryLabels.food.name}
-            </div>
-            <div className="mt-2 flex items-end justify-between">
-              <span className="text-2xl font-bold">{categoryLabels.food.percent}</span>
-              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
-                {categoryLabels.food.detail}
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: labourLabelOpacity }}
-            className="relative -mt-6 ml-4 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white px-4 py-3 shadow-xl shadow-orange-500/25 backdrop-blur"
-          >
-            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
-              {categoryLabels.labour.name}
-            </div>
-            <div className="mt-2 flex items-end justify-between">
-              <span className="text-2xl font-bold">{categoryLabels.labour.percent}</span>
-              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
-                {categoryLabels.labour.detail}
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: rentLabelOpacity }}
-            className="relative -mt-6 ml-8 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white px-4 py-3 shadow-xl shadow-amber-500/25 backdrop-blur"
-          >
-            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
-              {categoryLabels.rent.name}
-            </div>
-            <div className="mt-2 flex items-end justify-between">
-              <span className="text-2xl font-bold">{categoryLabels.rent.percent}</span>
-              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
-                {categoryLabels.rent.detail}
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: otherLabelOpacity }}
-            className="relative -mt-6 ml-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white px-4 py-3 shadow-xl shadow-purple-500/25 backdrop-blur"
-          >
-            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-white/80">
-              {categoryLabels.other.name}
-            </div>
-            <div className="mt-2 flex items-end justify-between">
-              <span className="text-2xl font-bold">{categoryLabels.other.percent}</span>
-              <span className="text-[9px] text-white/70 max-w-[100px] text-right">
-                {categoryLabels.other.detail}
-              </span>
-            </div>
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: costSummaryOpacity }}
-            className="relative -mt-6 ml-16 rounded-2xl border border-red-500/30 bg-gradient-to-br from-red-500/15 to-red-500/10 px-4 py-3 text-center shadow-lg shadow-red-500/20 backdrop-blur"
-          >
-            <div className="text-[10px] font-semibold tracking-[0.3em] uppercase text-red-600">
-              Total Costs
-            </div>
-            <div className="mt-3 text-3xl font-bold text-red-500">
-              <AnimatedNumber value={104} suffix="%" />
-            </div>
-            <div className="mt-1 text-[9px] text-red-900/70">
-              Exceeds revenue by 4%
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Negative Margin Scene - slides in from right */}
-        <motion.div
-          style={{ x: marginSlideX, opacity: marginOpacity }}
+            style={{ x: marginSlideX, opacity: marginOpacity }}
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="w-full max-w-3xl">
-              <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border-4 border-red-500/40 rounded-2xl p-8 shadow-2xl">
-                <div className="text-center space-y-5">
-                  <div>
-                    <div className="text-lg font-semibold text-muted-foreground mb-2">
-                      Net Margin
+              <div className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-red-200 dark:border-red-900/50 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-orange-500 to-red-500" />
+
+                <h3 className="text-4xl font-black text-red-600 dark:text-red-500 mb-10 text-center uppercase tracking-widest drop-shadow-sm">
+                  The Doom Loop
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                  {/* Step 1 */}
+                  <div className="group relative bg-gradient-to-br from-white to-red-50 dark:from-neutral-900 dark:to-red-950/30 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-lg hover:shadow-red-200/50 dark:hover:shadow-red-900/20 transition-all duration-500 hover:-translate-y-1 text-center">
+                    <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">1</div>
+                    <div className="mb-3">
+                      <span className="relative inline-block pb-1 px-1 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500">
+                        <motion.span
+                          style={{
+                            scaleX: highlight1,
+                            transformOrigin: "left",
+                            display: "inline-block"
+                          }}
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500 opacity-40"
+                        />
+                        <span className="relative z-10 text-lg font-bold text-red-700 dark:text-red-400 px-2 py-1">
+                          Rising Costs
+                        </span>
+                      </span>
                     </div>
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.05, 1],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                      className="text-7xl font-bold text-red-500"
-                    >
-                      <AnimatedNumber value={-4} suffix="%" />
-                    </motion.div>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                      Exploding costs for labour, food, and rent <span className="text-red-500 font-bold">erase</span> the industry's thin profit margins.
+                    </p>
                   </div>
 
-                  <div className="border-t-2 border-red-500/30 pt-5">
-                    <div className="text-base text-foreground mb-3 font-semibold">
-                      The Unsustainable Reality
+                  {/* Step 2 */}
+                  <div className="group relative bg-gradient-to-br from-white to-red-50 dark:from-neutral-900 dark:to-red-950/30 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-lg hover:shadow-red-200/50 dark:hover:shadow-red-900/20 transition-all duration-500 hover:-translate-y-1 text-center">
+                    <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">2</div>
+                    <div className="mb-3">
+                      <span className="relative inline-block pb-1 px-1 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500">
+                        <motion.span
+                          style={{
+                            scaleX: highlight2,
+                            transformOrigin: "left",
+                            display: "inline-block"
+                          }}
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500 opacity-40"
+                        />
+                        <span className="relative z-10 text-lg font-bold text-red-700 dark:text-red-400 px-2 py-1">
+                          Forced Hikes
+                        </span>
+                      </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 text-left">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <div className="text-3xl font-bold text-red-500 mb-1">
-                          <AnimatedNumber value={41} suffix="%" />
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          of B.C. restaurants operate at a loss or break even
-                        </div>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <div className="text-3xl font-bold text-red-500 mb-1">
-                          <AnimatedNumber value={1200} suffix="+" />
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          restaurants closed in Vancouver (2015-2025)
-                        </div>
-                      </div>
-                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                      To survive, operators must <span className="text-red-500 font-bold">raise prices</span>, reduce staff, and cut operating hours.
+                    </p>
                   </div>
 
-                  <div className="text-sm text-muted-foreground italic">
-                    &ldquo;When costs exceed revenue, there is no path to sustainability&rdquo;
+                  {/* Step 3 */}
+                  <div className="group relative bg-gradient-to-br from-white to-red-50 dark:from-neutral-900 dark:to-red-950/30 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-lg hover:shadow-red-200/50 dark:hover:shadow-red-900/20 transition-all duration-500 hover:-translate-y-1 text-center">
+                    <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">3</div>
+                    <div className="mb-3">
+                      <span className="relative inline-block pb-1 px-1 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500">
+                        <motion.span
+                          style={{
+                            scaleX: highlight3,
+                            transformOrigin: "left",
+                            display: "inline-block"
+                          }}
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500 opacity-40"
+                        />
+                        <span className="relative z-10 text-lg font-bold text-red-700 dark:text-red-400 px-2 py-1">
+                          Customer Retreat
+                        </span>
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                      Higher prices cause <span className="text-red-500 font-bold">sticker shock</span>, driving customers away from dining out.
+                    </p>
                   </div>
+
+                  {/* Step 4 */}
+                  <div className="group relative bg-gradient-to-br from-white to-red-50 dark:from-neutral-900 dark:to-red-950/30 p-6 rounded-2xl border border-red-100 dark:border-red-900/30 shadow-lg hover:shadow-red-200/50 dark:hover:shadow-red-900/20 transition-all duration-500 hover:-translate-y-1 text-center">
+                    <div className="absolute -top-4 -right-4 w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">4</div>
+                    <div className="mb-3">
+                      <span className="relative inline-block pb-1 px-1 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500">
+                        <motion.span
+                          style={{
+                            scaleX: highlight4,
+                            transformOrigin: "left",
+                            display: "inline-block"
+                          }}
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500 opacity-40"
+                        />
+                        <span className="relative z-10 text-lg font-bold text-red-700 dark:text-red-400 px-2 py-1">
+                          The Death Spiral
+                        </span>
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                      Lower volume forces <span className="text-red-500 font-bold">further hikes</span> on remaining guests, accelerating collapse.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-10 text-center">
+                  <p className="text-red-500/80 italic font-medium text-lg">
+                    &ldquo;A vicious cycle where survival tactics only accelerate the end.&rdquo;
+                  </p>
                 </div>
               </div>
             </div>
