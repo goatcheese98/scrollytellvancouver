@@ -6,7 +6,11 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/story.test.ts",
+    "test:browser": "playwright test",
+    "lint:story": "eslint app/page.tsx app/layout.tsx components/story lib/story.ts lib/restaurants.ts tests playwright.config.ts --max-warnings=0"
   },
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
@@ -18,6 +22,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
+    "geist": "1.5.1",
     "gsap": "^3.13.0",
     "lenis": "^1.3.13",
     "lucide-react": "^0.552.0",
@@ -34,6 +39,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^20",

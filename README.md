@@ -2,7 +2,14 @@
 
 A scrollytelling data visualization web application documenting the crisis in Vancouver's restaurant industry from 2015-2025.
 
-## Tech Stack
+The active route is now a five-chapter, keyboard-accessible reader using LUM tokens, self-hosted Geist, native menu comparison and a provider-free location plot. Original source data and legacy scene modules are retained.
+
+- [Design translation and data limits](docs/design/LUM-STORY.md)
+- [Cloud verification and baseline failures](docs/VERIFICATION.md)
+- Run `npm ci`, `npm run typecheck`, `npm run lint:story`, `npm test`, `npm run build`, then `npm run test:browser` (install Chromium with `npx playwright install chromium`).
+- `npm run lint` still reports pre-existing legacy scene/UI errors; the changed story modules have a separate zero-warning lint gate.
+
+## Original animation stack (legacy scene modules)
 
 - **Next.js 16.0.1** with App Router
 - **TypeScript**
@@ -19,7 +26,7 @@ A scrollytelling data visualization web application documenting the crisis in Va
 
 ### Prerequisites
 
-- Node.js 18+ installed
+- Node.js 24 installed (the CI version)
 - npm or pnpm package manager
 
 ### Installation
@@ -29,14 +36,7 @@ A scrollytelling data visualization web application documenting the crisis in Va
 npm install
 ```
 
-2. Set up environment variables:
-
-Create a `.env.local` file in the root directory:
-
-```bash
-# Get your Mapbox token from https://account.mapbox.com/access-tokens/
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token_here
-```
+2. No application provider credentials are required by the active reading route.
 
 3. Run the development server:
 ```bash
@@ -71,7 +71,7 @@ VC/
     └── lenis.ts            # Smooth scroll hook
 ```
 
-## Scenes Overview
+## Legacy scene inventory (retained source)
 
 ### Scene 1: The Price Shock
 Interactive before/after slider comparing 2015 ($8.50) vs 2025 ($16.00) pho prices.
