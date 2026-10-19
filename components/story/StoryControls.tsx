@@ -9,8 +9,9 @@ export function focusFragment(event: MouseEvent<HTMLAnchorElement>) {
   const hash = event.currentTarget.hash;
   const target = document.getElementById(hash.slice(1));
   if (!target) return;
-  // Keep native history/scroll behavior and move focus only for explicit navigation.
-  requestAnimationFrame(() => target.focus({ preventScroll: true }));
+  // Focus within this activation. A delayed frame could steal focus from the next control.
+  // Leave default anchor history/scroll behavior intact.
+  target.focus({ preventScroll: true });
 }
 
 const reducedQuery = '(prefers-reduced-motion: reduce)';

@@ -38,7 +38,7 @@ for (const width of [320,390,768,1024,1440]) for (const colorScheme of ['light',
     await page.getByRole('link',{name:'References for the cost chapter'}).click();
     await expect(page.locator('#cost-sources')).toBeFocused(); await expect(page).toHaveURL(/#cost-sources$/);
     const slider = page.getByRole('slider',{name:'Compare menus'});
-    await slider.focus(); await page.keyboard.press('Home'); await expect(slider).toHaveValue('0');
+    await slider.focus(); await expect(slider).toBeFocused(); await page.keyboard.press('Home'); await expect(slider).toHaveValue('0');
     await page.keyboard.press('End'); await expect(slider).toHaveValue('100');
     await page.getByRole('button',{name:"Inspect Kent's Kitchen"}).focus(); await page.keyboard.press('Space');
     await expect(page.locator('#restaurant-detail')).toContainText('Recorded closure: 2023');
@@ -105,4 +105,30 @@ test('200% equivalent layout and enlarged body text remain readable', async ({ p
   await expect(page.locator('#impossible-math')).toBeFocused();
   await expect(page.getByRole('table',{name:'Equivalent cost breakdown'})).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test('a delayed navigation frame cannot steal focus from the menu slider', async ({ page }) => {
+  await page.goto('/');
+  const reference = page.getByRole('link', { name: 'References for the cost chapter' });
+  await reference.focus();
+  // Hold navigation frames to reproduce the hosted focus race deterministically.
+  await page.evaluate(() => {
+    const nativeFrame = window.requestAnimationFrame;
+    const pending: FrameRequestCallback[] = [];
+    window.requestAnimationFrame = callback => { pending.push(callback); return pending.length; };
+    (window as Window & { flushStoryFrames?: () => void }).flushStoryFrames = () => {
+      window.requestAnimationFrame = nativeFrame;
+      pending.splice(0).forEach(callback => callback(performance.now()));
+    };
+  });
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#cost-sources')).toBeFocused();
+  const slider = page.getByRole('slider', { name: 'Compare menus' });
+  await slider.focus();
+  await page.evaluate(() => (window as Window & { flushStoryFrames?: () => void }).flushStoryFrames?.());
+  await expect(slider).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(slider).toHaveValue('0');
+  await page.keyboard.press('End');
+  await expect(slider).toHaveValue('100');
 });

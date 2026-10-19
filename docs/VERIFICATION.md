@@ -21,7 +21,7 @@ Run with Node 24 and a locked install. `npm run test:browser` starts the built N
 | `npm run lint:story` | 0 | Read-only, zero warnings, all changed TS/TSX and tests |
 | `npm test` | 0 | Six meaningful fixture/data/navigation checks |
 | `npm run build` | 0 | Production compilation and static prerender |
-| `npm run test:browser` | 0 · 14 passed | Cloud Chromium functional matrix |
+| `npm run test:browser` | 0 · 45 passed (15 cases × 3) | Cloud Chromium functional matrix |
 | `npm run lint` | 1 | Same baseline 56 errors/11 warnings; no added lint issues |
 | `git diff --check` | 0 | Patch whitespace check |
 
@@ -36,3 +36,11 @@ CI is bounded to 15 minutes, contents-read permission, locked install, checks/bu
 Reviewed changed code for event cleanup, modified-link behavior, focus/history, runtime validation, integer fee arithmetic, theme contrast, motion preference changes, static content independence, safe source links and provider isolation. No secret values, build output, dependency folders or credentials are committed. Full-repo baseline lint debt remains. The legacy animation scenes/dependencies remain inactive and are not claimed migrated. The candidate PNG is unavailable. Historical closure records and source-policy claims are preserved with dates/limitations, not newly verified. Next server hosting is retained; standalone export/Cloudflare is unverified.
 
 [Implementation screenshots](design/screens/) include opening and cost chapter captures at 320/768/1440px, both themes.
+
+## Hosted focus-race correction
+
+Push run [39335584591](https://github.com/goatcheese98/scrollytellvancouver/actions/runs/39335584591), job 118344152541, failed the 1440px/light menu `Home` assertion: expected 0, received 50. The same-head PR run passed; that duplicate result did not establish correctness.
+
+Cause: `focusFragment` queued `target.focus()` in `requestAnimationFrame` after native anchor navigation already focused the heading. A user/test could focus the menu slider before that queued frame, which then stole focus back to the source heading. The subsequent Home key therefore never reached the slider. A cloud regression holds animation-frame callbacks, navigates to cost references, focuses the slider, then releases the callbacks. It failed on the old code at the slider-focus assertion, exit 1, deterministically.
+
+Correction: focus synchronously during explicit anchor activation, preserving default fragment/history/scroll behavior; no deferred second focus change. The regression verifies focus survives frame release and Home/End still reach 0/100. The matrix also asserts slider focus before sending keys. No sleeps, retries, increased assertion timeouts or skipped checks. CI now runs all 15 browser cases three times (45 executions), with retries explicitly disabled. The corrected cloud run passed all 45 executions (exit 0); full typecheck, changed-code lint, six unit tests and production build also exited 0.
