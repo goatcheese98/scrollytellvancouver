@@ -43,3 +43,5 @@ next-env.d.ts
 # browser verification output
 /test-results/
 /playwright-report/
+
+/test-results-static/

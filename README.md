@@ -6,12 +6,12 @@ The active route is now a five-chapter, keyboard-accessible reader using LUM tok
 
 - [Design translation and data limits](docs/design/LUM-STORY.md)
 - [Cloud verification and baseline failures](docs/VERIFICATION.md)
-- Run `npm ci`, `npm run typecheck`, `npm run lint:story`, `npm test`, `npm run build`, then `npm run test:browser` (install Chromium with `npx playwright install chromium`).
+- Run `npm ci`, `npm run typecheck`, `npm run typecheck:story`, `npm run lint:story`, `npm test`, `npm run build`, then `npm run test:browser` (install Chromium with `npx playwright install chromium`).
 - `npm run lint` still reports pre-existing legacy scene/UI errors; the changed story modules have a separate zero-warning lint gate.
 
 ## Original animation stack (legacy scene modules)
 
-- **Next.js 16.0.1** with App Router
+- **Next.js 16.4.2** with App Router
 - **TypeScript**
 - **Tailwind CSS v4**
 - **Lenis** - Smooth scrolling
@@ -20,7 +20,7 @@ The active route is now a five-chapter, keyboard-accessible reader using LUM tok
 - **react-intersection-observer** - Viewport detection
 - **Recharts** - Data visualizations
 - **react-map-gl + MapLibre** - Interactive maps
-- **Aceternity UI** - Pre-built components
+- **Local UI components** - Legacy scene presentation
 
 ## Getting Started
 
@@ -117,3 +117,9 @@ npm start
 ## License
 
 All rights reserved.
+
+## Verified static output
+
+`npm run build:static` produces a standalone `out/` directory, including the original menus/data and self-hosted assets. No Next server, application provider credentials or adapter is needed to serve those files. `STORY_STATIC_EXPORT=1 npm run test:browser -- --repeat-each=3` verifies that output using a cloud-only Python static preview. Python is a test-server convenience, not a deployment requirement.
+
+The default `npm run build` / `npm start` Next workflow remains available. Run the default build again before `npm start` after an export build, since both commands regenerate `.next/`. No deployment is performed by either build. See [boundary/dependency follow-up](docs/BOUNDARIES.md) for audit debt and results.
