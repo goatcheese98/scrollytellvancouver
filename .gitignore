@@ -45,3 +45,7 @@ next-env.d.ts
 /playwright-report/
 
 /test-results-static/
+
+/.wrangler/
+/test-results-hosting/
+/test-results-maplibre/

@@ -12,7 +12,9 @@
     "test:browser": "playwright test",
     "lint:story": "eslint app/page.tsx app/layout.tsx components/story lib/story.ts lib/restaurants.ts lib/restaurant-state.ts lib/validation.ts tests playwright.config.ts next.config.ts --max-warnings=0",
     "typecheck:story": "tsc -p tsconfig.story.json",
-    "build:static": "STORY_STATIC_EXPORT=1 next build --webpack"
+    "build:static": "STORY_STATIC_EXPORT=1 next build --webpack && node --experimental-strip-types scripts/prepare-static.mts",
+    "preview:cloudflare": "CLOUDFLARE_CF_FETCH_ENABLED=false WRANGLER_SEND_METRICS=false wrangler dev --local --ip 127.0.0.1 --port 3100",
+    "test:hosting": "playwright test --config playwright.hosting.config.ts"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.35.0",

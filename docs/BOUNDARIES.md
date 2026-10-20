@@ -1,3 +1,5 @@
+> Historical checkpoint at 7e2b31e. [Subsequent source/audit/Cloudflare follow-up](MODERNIZATION-FOLLOWUP.md) supersedes the remaining-debt and hosting limitations below.
+
 # Typed story boundaries and verified output
 
 This follow-up starts at `be8a88295a961ca46984dcd84fa27d21dcf87d42` on the existing draft branch. The remote and restored checkout matched, with no repository AGENTS.md found. The exact Paper readback remains in `docs/design/readback.json`; it is still a candidate without human approval or its original PNG. No new design approval is claimed.

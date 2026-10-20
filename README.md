@@ -123,3 +123,7 @@ All rights reserved.
 `npm run build:static` produces a standalone `out/` directory, including the original menus/data and self-hosted assets. No Next server, application provider credentials or adapter is needed to serve those files. `STORY_STATIC_EXPORT=1 npm run test:browser -- --repeat-each=3` verifies that output using a cloud-only Python static preview. Python is a test-server convenience, not a deployment requirement.
 
 The default `npm run build` / `npm start` Next workflow remains available. Run the default build again before `npm start` after an export build, since both commands regenerate `.next/`. No deployment is performed by either build. See [boundary/dependency follow-up](docs/BOUNDARIES.md) for audit debt and results.
+
+## Cloudflare local static rehearsal
+
+After `npm run build:static`, run `npm run preview:cloudflare` to serve the actual export with Cloudflare assets routing and headers in the local cloud runtime. `npm run test:hosting -- --repeat-each=3` checks reader behavior, real missing-asset/404/cache/security responses, and the retained MapLibre consumer. It requires Node 24 and local Chromium/Playwright. No credentials or deployment are needed. See [source, audit and hosting follow-up](docs/MODERNIZATION-FOLLOWUP.md) for the remaining upstream tooling advisory and evidence.
