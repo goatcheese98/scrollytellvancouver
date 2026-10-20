@@ -101,7 +101,7 @@ export default function Scene9() {
             The Hollowing Out
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Vancouver's restaurant industry is becoming barbell-shaped: luxury at the top, chains at the bottom, and the middle disappearing.
+            Vancouver&#39;s restaurant industry is becoming barbell-shaped: luxury at the top, chains at the bottom, and the middle disappearing.
           </p>
         </motion.div>
 

@@ -99,7 +99,7 @@ export default function Scene8() {
             The Map of Loss
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Each pin represents a beloved restaurant that couldn't survive the squeeze.
+            Each pin represents a beloved restaurant that couldn&#39;t survive the squeeze.
             Click to see their stories.
           </p>
         </motion.div>
@@ -182,7 +182,7 @@ export default function Scene8() {
 
           <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
             <div className="text-4xl font-bold text-red-400 mb-2">30%</div>
-            <div className="text-muted-foreground">Won't Reopen</div>
+            <div className="text-muted-foreground">Won&#39;t Reopen</div>
             <div className="text-sm text-muted-foreground mt-2">Of restaurants that closed during pandemic</div>
           </div>
 

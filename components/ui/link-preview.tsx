@@ -91,7 +91,7 @@ export const LinkPreview: React.FC<LinkPreviewProps> = ({
               {/* Image Preview */}
               {preview.image && (
                 <div className="w-full h-48 bg-zinc-50 dark:bg-zinc-950 overflow-hidden border-b border-zinc-200 dark:border-zinc-800">
-                  <img
+                  <Image unoptimized width={340} height={192}
                     src={preview.image}
                     alt={preview.title}
                     className="w-full h-full object-contain object-center"

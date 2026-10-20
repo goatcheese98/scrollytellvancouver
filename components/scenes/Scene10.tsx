@@ -48,7 +48,7 @@ export default function Scene10() {
 
             {/* Subtitle */}
             <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              When a bowl of pho doubles in price but restaurants still can't survive,
+              When a bowl of pho doubles in price but restaurants still can&#39;t survive,
               <br />
               <span className="text-foreground font-semibold">something is fundamentally broken.</span>
             </p>
@@ -104,7 +104,7 @@ export default function Scene10() {
               className="mt-20 pt-12 border-t border-border"
             >
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                Vancouver's restaurant industry is at a crossroads.
+                Vancouver&#39;s restaurant industry is at a crossroads.
                 <br />
                 <span className="text-foreground font-semibold">
                   Without systemic change, the middle will continue to vanish.

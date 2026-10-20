@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Compare } from "@/components/ui/compare";
 import { LinkPreview } from "@/components/ui/link-preview";
-import { CompactSource } from "@/components/ui/compact-source";
 import { ExternalLink, Calendar, TrendingUp } from "lucide-react";
 
 export const CompareDemo = () => {
@@ -15,7 +14,6 @@ export const CompareDemo = () => {
 
   // Easing functions for natural momentum
   const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-  const easeInCubic = (t: number) => t * t * t;
 
   useEffect(() => {
     if (!showAutoplay || isUserInteracting) return;
@@ -57,7 +55,7 @@ export const CompareDemo = () => {
                 const progress = Math.min(elapsed / phase3Duration, 1);
 
                 // Use ease-in-out for smooth acceleration and deceleration
-                let easedProgress = progress < 0.5
+                const easedProgress = progress < 0.5
                   ? 2 * progress * progress
                   : -1 + (4 - 2 * progress) * progress;
 

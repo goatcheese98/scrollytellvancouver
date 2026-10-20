@@ -113,7 +113,7 @@ export default function Scene4() {
                         </div>
 
                         <blockquote className={cn("border-l-4 pl-4 italic text-muted-foreground", `border-${item.color}-500`)}>
-                          "{item.quote.text}"
+                          &quot;{item.quote.text}&quot;
                           <footer className="text-sm font-bold text-foreground mt-2">— {item.quote.author}</footer>
                         </blockquote>
 
