@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 
@@ -14,7 +14,6 @@ export const TracingBeam = ({ children, className }: { children: React.ReactNode
     offset: ['start 20%', 'end 80%'],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, svgHeight]);
 
   useEffect(() => {
     if (containerRef.current) {

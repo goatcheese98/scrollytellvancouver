@@ -1,0 +1,201 @@
+{
+  "graph": {
+    "lib/validation.ts": [],
+    "lib/restaurant-state.ts": [
+      "./restaurants.ts",
+      "./validation.ts"
+    ],
+    "lib/story.ts": [
+      "./validation.ts"
+    ],
+    "lib/restaurants.ts": [],
+    "lib/utils.ts": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "lib/lenis.ts": [
+      "react",
+      "lenis"
+    ],
+    "app/page.tsx": [
+      "@/components/story/StoryReader"
+    ],
+    "app/layout.tsx": [
+      "next",
+      "geist/font/sans",
+      "geist/font/mono",
+      "./globals.css"
+    ],
+    "components/story/StoryReader.tsx": [
+      "react",
+      "@/public/data/sources.json",
+      "@/lib/story",
+      "./StoryControls",
+      "./MenuComparison",
+      "./RestaurantMap"
+    ],
+    "components/story/RestaurantMap.tsx": [
+      "react",
+      "@/lib/restaurants",
+      "@/lib/restaurant-state"
+    ],
+    "components/story/StoryControls.tsx": [
+      "react",
+      "@/lib/story"
+    ],
+    "components/story/MenuComparison.tsx": [
+      "react"
+    ],
+    "components/ui/typing-text.tsx": [
+      "framer-motion",
+      "react"
+    ],
+    "components/ui/typewriter-effect.tsx": [
+      "@/lib/utils",
+      "framer-motion",
+      "react"
+    ],
+    "components/ui/tracing-beam.tsx": [
+      "react",
+      "framer-motion",
+      "@/lib/utils"
+    ],
+    "components/ui/text-overlay.tsx": [
+      "framer-motion",
+      "@/lib/utils"
+    ],
+    "components/ui/text-generate-effect.tsx": [
+      "react",
+      "framer-motion",
+      "@/lib/utils"
+    ],
+    "components/ui/sticky-scroll-reveal.tsx": [
+      "react",
+      "framer-motion",
+      "framer-motion",
+      "@/lib/utils"
+    ],
+    "components/ui/sparkles.tsx": [
+      "react",
+      "react",
+      "@tsparticles/react",
+      "@tsparticles/engine",
+      "@tsparticles/slim",
+      "@/lib/utils",
+      "framer-motion"
+    ],
+    "components/ui/simple-sparkles.tsx": [
+      "react",
+      "framer-motion"
+    ],
+    "components/ui/link-preview.tsx": [
+      "react",
+      "framer-motion",
+      "lucide-react",
+      "next/image"
+    ],
+    "components/ui/hero-highlight.tsx": [
+      "@/lib/utils",
+      "framer-motion",
+      "react"
+    ],
+    "components/ui/compare.tsx": [
+      "next/image",
+      "react",
+      "@/components/ui/sparkles",
+      "framer-motion",
+      "@/lib/utils",
+      "@tabler/icons-react"
+    ],
+    "components/ui/compare-demo.tsx": [
+      "react",
+      "@/components/ui/compare",
+      "@/components/ui/link-preview",
+      "lucide-react"
+    ],
+    "components/ui/compact-source.tsx": [
+      "react",
+      "@/components/ui/link-preview",
+      "lucide-react",
+      "next/image"
+    ],
+    "components/ui/animated-number.tsx": [
+      "react",
+      "framer-motion"
+    ],
+    "components/scenes/Scene9.tsx": [
+      "framer-motion",
+      "react-intersection-observer",
+      "react"
+    ],
+    "components/scenes/Scene8.tsx": [
+      "react",
+      "framer-motion",
+      "react-intersection-observer",
+      "react-map-gl/maplibre",
+      "maplibre-gl/dist/maplibre-gl.css"
+    ],
+    "components/scenes/Scene7.tsx": [
+      "framer-motion",
+      "react-intersection-observer"
+    ],
+    "components/scenes/Scene6.tsx": [],
+    "components/scenes/Scene5.tsx": [
+      "framer-motion"
+    ],
+    "components/scenes/Scene4.tsx": [
+      "framer-motion",
+      "react",
+      "@/components/ui/tracing-beam",
+      "@/components/ui/text-generate-effect",
+      "next/image",
+      "@/lib/utils"
+    ],
+    "components/scenes/Scene3.tsx": [
+      "react",
+      "framer-motion",
+      "@/components/ui/text-generate-effect",
+      "@/components/ui/animated-number"
+    ],
+    "components/scenes/Scene2.tsx": [],
+    "components/scenes/Scene10.tsx": [
+      "framer-motion",
+      "react"
+    ],
+    "components/scenes/Scene1.tsx": [
+      "next/image",
+      "react",
+      "framer-motion",
+      "@/components/ui/compare-demo",
+      "@/components/ui/text-generate-effect",
+      "@/components/ui/compact-source"
+    ]
+  },
+  "activeModules": [
+    "app/layout.tsx",
+    "app/page.tsx",
+    "components/story/MenuComparison.tsx",
+    "components/story/RestaurantMap.tsx",
+    "components/story/StoryControls.tsx",
+    "components/story/StoryReader.tsx",
+    "lib/restaurant-state.ts",
+    "lib/restaurants.ts",
+    "lib/story.ts",
+    "lib/validation.ts"
+  ],
+  "activeImports": [
+    "geist/font/mono",
+    "geist/font/sans",
+    "next",
+    "react"
+  ],
+  "directWithoutSourceImports": [
+    "class-variance-authority",
+    "gsap",
+    "mapbox-gl",
+    "motion",
+    "react-dom",
+    "recharts",
+    "tailwindcss-animate"
+  ]
+}

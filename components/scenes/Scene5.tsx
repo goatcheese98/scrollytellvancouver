@@ -212,7 +212,7 @@ export default function Scene5() {
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
-                Rather than absorb the cost, platforms introduced "regulatory response fees," "service fees," and "small order fees"—all charged directly to customers. The cap didn't reduce costs; it just shifted who paid them.
+                Rather than absorb the cost, platforms introduced &quot;regulatory response fees,&quot; &quot;service fees,&quot; and &quot;small order fees&quot;—all charged directly to customers. The cap didn&#39;t reduce costs; it just shifted who paid them.
               </p>
             </motion.div>
 
@@ -248,12 +248,12 @@ export default function Scene5() {
               transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border-2 border-red-500/50 rounded-xl p-8 space-y-4"
             >
-              <h3 className="text-3xl font-bold text-foreground">The Math Doesn't Work</h3>
+              <h3 className="text-3xl font-bold text-foreground">The Math Doesn&#39;t Work</h3>
               <p className="text-muted-foreground text-lg">
                 Customers are priced out. Restaurants earn less per order. And the platforms? They extract value from both sides while neither party benefits.
               </p>
               <p className="text-sm text-muted-foreground">
-                This isn't sustainable economics—it's a system designed to extract maximum value from a struggling industry. While delivery apps were meant to expand restaurant reach, they've instead become another cost burden that accelerates closures rather than preventing them.
+                This isn&#39;t sustainable economics—it&#39;s a system designed to extract maximum value from a struggling industry. While delivery apps were meant to expand restaurant reach, they&#39;ve instead become another cost burden that accelerates closures rather than preventing them.
               </p>
             </motion.div>
 

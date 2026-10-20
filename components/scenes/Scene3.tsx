@@ -92,6 +92,7 @@ const GridSquare = ({ square, scrollProgress, index }: GridSquareProps) => {
     [0.64, 0.68],
     [0, 1]
   );
+  const overflowOtherOpacity = useTransform(overflowRedOpacity, [0, 0.5], [1, 0]);
 
   const dollarOpacity = useTransform(fillOpacity, [0, 0.4], [1, 0]);
 
@@ -209,7 +210,7 @@ const GridSquare = ({ square, scrollProgress, index }: GridSquareProps) => {
             className="absolute inset-0 bg-gradient-to-br from-purple-400 to-purple-500 rounded-sm shadow-[0_0_8px_rgba(168,85,247,0.4)] flex items-center justify-center"
           >
             {/* Show 'Other' icon initially */}
-            <motion.div style={{ opacity: useTransform(overflowRedOpacity, [0, 0.5], [1, 0]) }} className="w-full h-full flex items-center justify-center">
+            <motion.div style={{ opacity: overflowOtherOpacity }} className="w-full h-full flex items-center justify-center">
               {getCategoryIcon('other')}
             </motion.div>
           </motion.div>
@@ -626,7 +627,7 @@ export default function Scene3() {
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-                      Exploding costs for labour, food, and rent <span className="text-red-500 font-bold">erase</span> the industry's thin profit margins.
+                      Exploding costs for labour, food, and rent <span className="text-red-500 font-bold">erase</span> the industry&#39;s thin profit margins.
                     </p>
                   </motion.div>
 

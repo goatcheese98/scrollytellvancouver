@@ -2,9 +2,16 @@
 
 A scrollytelling data visualization web application documenting the crisis in Vancouver's restaurant industry from 2015-2025.
 
-## Tech Stack
+The active route is now a five-chapter, keyboard-accessible reader using LUM tokens, self-hosted Geist, native menu comparison and a provider-free location plot. Original source data and legacy scene modules are retained.
 
-- **Next.js 16.0.1** with App Router
+- [Design translation and data limits](docs/design/LUM-STORY.md)
+- [Cloud verification and baseline failures](docs/VERIFICATION.md)
+- Run `npm ci`, `npm run typecheck`, `npm run typecheck:story`, `npm run lint:story`, `npm test`, `npm run build`, then `npm run test:browser` (install Chromium with `npx playwright install chromium`).
+- `npm run lint` still reports pre-existing legacy scene/UI errors; the changed story modules have a separate zero-warning lint gate.
+
+## Original animation stack (legacy scene modules)
+
+- **Next.js 16.4.2** with App Router
 - **TypeScript**
 - **Tailwind CSS v4**
 - **Lenis** - Smooth scrolling
@@ -13,13 +20,13 @@ A scrollytelling data visualization web application documenting the crisis in Va
 - **react-intersection-observer** - Viewport detection
 - **Recharts** - Data visualizations
 - **react-map-gl + MapLibre** - Interactive maps
-- **Aceternity UI** - Pre-built components
+- **Local UI components** - Legacy scene presentation
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ installed
+- Node.js 24 installed (the CI version)
 - npm or pnpm package manager
 
 ### Installation
@@ -29,14 +36,7 @@ A scrollytelling data visualization web application documenting the crisis in Va
 npm install
 ```
 
-2. Set up environment variables:
-
-Create a `.env.local` file in the root directory:
-
-```bash
-# Get your Mapbox token from https://account.mapbox.com/access-tokens/
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token_here
-```
+2. No application provider credentials are required by the active reading route.
 
 3. Run the development server:
 ```bash
@@ -71,7 +71,7 @@ VC/
     └── lenis.ts            # Smooth scroll hook
 ```
 
-## Scenes Overview
+## Legacy scene inventory (retained source)
 
 ### Scene 1: The Price Shock
 Interactive before/after slider comparing 2015 ($8.50) vs 2025 ($16.00) pho prices.
@@ -117,3 +117,13 @@ npm start
 ## License
 
 All rights reserved.
+
+## Verified static output
+
+`npm run build:static` produces a standalone `out/` directory, including the original menus/data and self-hosted assets. No Next server, application provider credentials or adapter is needed to serve those files. `STORY_STATIC_EXPORT=1 npm run test:browser -- --repeat-each=3` verifies that output using a cloud-only Python static preview. Python is a test-server convenience, not a deployment requirement.
+
+The default `npm run build` / `npm start` Next workflow remains available. Run the default build again before `npm start` after an export build, since both commands regenerate `.next/`. No deployment is performed by either build. See [boundary/dependency follow-up](docs/BOUNDARIES.md) for audit debt and results.
+
+## Cloudflare local static rehearsal
+
+After `npm run build:static`, run `npm run preview:cloudflare` to serve the actual export with Cloudflare assets routing and headers in the local cloud runtime. `npm run test:hosting -- --repeat-each=3` checks reader behavior, real missing-asset/404/cache/security responses, and the retained MapLibre consumer. It requires Node 24 and local Chromium/Playwright. No credentials or deployment are needed. See [source, audit and hosting follow-up](docs/MODERNIZATION-FOLLOWUP.md) for the remaining upstream tooling advisory and evidence.

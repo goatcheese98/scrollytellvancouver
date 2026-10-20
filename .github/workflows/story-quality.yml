@@ -1,0 +1,41 @@
+name: Story quality
+on:
+  pull_request:
+  push:
+    branches: [codex/lum-story-controls]
+permissions:
+  contents: read
+jobs:
+  story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run typecheck:story
+      - run: npm run lint
+      - run: npm run lint:story
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser -- --repeat-each=3
+      - run: npm run build:static
+      - run: STORY_STATIC_EXPORT=1 npm run test:browser -- --repeat-each=3 --output=test-results-static
+      - run: npm run test:hosting -- --repeat-each=3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: story-browser-evidence
+          path: |
+            playwright-report/
+            test-results/
+            test-results-static/
+            test-results-hosting/
+          retention-days: 7

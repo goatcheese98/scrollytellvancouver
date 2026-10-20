@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { CompareDemo } from '@/components/ui/compare-demo';
@@ -50,14 +51,14 @@ export default function Scene1() {
                 transition={{ duration: 0.6, delay: 1.5 }}
                 className="relative rounded-xl overflow-hidden border-2 border-border shadow-lg"
               >
-                <img
+                <Image unoptimized width={1023} height={744}
                   src="/images/pho-goodness-storefront.jpg"
                   alt="Pho Goodness Vietnamese Restaurant storefront on Davie Street, Vancouver"
                   className="w-full h-auto"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-3">
                   <p className="text-white text-xs md:text-sm font-medium">
-                    Pho Goodness on Davie Street — it's a fundamental shift in Vancouver's food accessibility.
+                    Pho Goodness on Davie Street — it&#39;s a fundamental shift in Vancouver&#39;s food accessibility.
                   </p>
                 </div>
               </motion.div>
@@ -70,16 +71,16 @@ export default function Scene1() {
                 className="space-y-4"
               >
                 <p className="text-base text-muted-foreground md:text-lg">
-                  Vancouver's go-to comfort bowl now costs nearly double. Explore how a simple large pho went from an easy weeknight staple to a luxury line item.
+                  Vancouver&#39;s go-to comfort bowl now costs nearly double. Explore how a simple large pho went from an easy weeknight staple to a luxury line item.
                 </p>
                 <p className="text-base text-muted-foreground md:text-lg">
-                  In 2015, a large pho was a $8-10 staple that fed families across Vancouver's neighborhoods. By 2025, that same bowl requires the equivalent of a 2015 dinner for two. This isn't just inflation—<span className="font-bold text-indigo-600 dark:text-indigo-400">it's a fundamental shift in Vancouver's food accessibility.</span>
+                  In 2015, a large pho was a $8-10 staple that fed families across Vancouver&#39;s neighborhoods. By 2025, that same bowl requires the equivalent of a 2015 dinner for two. This isn&#39;t just inflation—<span className="font-bold text-indigo-600 dark:text-indigo-400">it&#39;s a fundamental shift in Vancouver&#39;s food accessibility.</span>
                 </p>
                 <p className="text-base text-muted-foreground md:text-lg">
-                  A 100% price increase in just 10 years has pushed Vancouver's restaurant industry to a critical threshold. What was once an $8.50 comfort meal now costs $17.00—doubling faster than wages, rent, or nearly any other living expense.
+                  A 100% price increase in just 10 years has pushed Vancouver&#39;s restaurant industry to a critical threshold. What was once an $8.50 comfort meal now costs $17.00—doubling faster than wages, rent, or nearly any other living expense.
                 </p>
                 <p className="text-base text-muted-foreground md:text-lg">
-                  This isn't just about one restaurant. Across Vancouver, over 1,200 establishments have closed their doors since 2020, with the pace accelerating to roughly one closure per week in 2025.
+                  This isn&#39;t just about one restaurant. Across Vancouver, over 1,200 establishments have closed their doors since 2020, with the pace accelerating to roughly one closure per week in 2025.
                 </p>
                 <div className="p-4 bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500 rounded">
                   <p className="text-sm text-red-900 dark:text-red-200 font-medium">
@@ -183,22 +184,22 @@ export default function Scene1() {
                 className="space-y-6 pt-8 border-t border-border"
               >
                 <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-                  Who's Cutting Back?
+                  Who&#39;s Cutting Back?
                 </h2>
                 <div className="space-y-4">
                   <p className="text-lg text-muted-foreground">
-                    The restaurant price crisis isn't hitting all demographics equally. Young diners aged 18-34—traditionally the most frequent restaurant customers—are leading the retreat, with 81% reporting they've cut back on dining out.
+                    The restaurant price crisis isn&#39;t hitting all demographics equally. Young diners aged 18-34—traditionally the most frequent restaurant customers—are leading the retreat, with 81% reporting they&#39;ve cut back on dining out.
                   </p>
                   <p className="text-lg text-muted-foreground">
-                    This generation faces a perfect storm: entry-level wages that haven't kept pace with inflation, student debt burdens, and housing costs that consume ever-larger portions of their income. A $17 pho bowl isn't just expensive—it's a discretionary expense they increasingly can't justify.
+                    This generation faces a perfect storm: entry-level wages that haven&#39;t kept pace with inflation, student debt burdens, and housing costs that consume ever-larger portions of their income. A $17 pho bowl isn&#39;t just expensive—it&#39;s a discretionary expense they increasingly can&#39;t justify.
                   </p>
                   <div className="p-4 bg-orange-50 dark:bg-orange-950/20 border-l-4 border-orange-500 rounded">
                     <p className="text-sm text-orange-900 dark:text-orange-200 font-medium">
-                      "Millennials and Gen Z remain the most likely to purchase restaurant food at least once a week, but they feel the financial pressure most acutely." — Restaurants Canada, 2025
+                      &quot;Millennials and Gen Z remain the most likely to purchase restaurant food at least once a week, but they feel the financial pressure most acutely.&quot; — Restaurants Canada, 2025
                     </p>
                   </div>
                   <p className="text-lg text-muted-foreground">
-                    The data reveals a fundamental shift in dining behavior: younger consumers aren't abandoning restaurants entirely—they're trading down from full-service dining to quick-service options, delivery apps, and even replacing meals with snacks. The restaurant experience is becoming a luxury they reserve for special occasions rather than a regular part of their weekly routine.
+                    The data reveals a fundamental shift in dining behavior: younger consumers aren&#39;t abandoning restaurants entirely—they&#39;re trading down from full-service dining to quick-service options, delivery apps, and even replacing meals with snacks. The restaurant experience is becoming a luxury they reserve for special occasions rather than a regular part of their weekly routine.
                   </p>
                 </div>
               </motion.div>
@@ -319,7 +320,7 @@ export default function Scene1() {
                         <div className="flex items-start gap-3">
                           <div className="w-2 h-2 rounded-full bg-red-500 mt-2 flex-shrink-0"></div>
                           <p className="text-sm text-muted-foreground">
-                            <span className="font-semibold text-foreground">Young diners hit hardest:</span> Entry-level wages haven't kept pace with restaurant price increases
+                            <span className="font-semibold text-foreground">Young diners hit hardest:</span> Entry-level wages haven&#39;t kept pace with restaurant price increases
                           </p>
                         </div>
                         <div className="flex items-start gap-3">
