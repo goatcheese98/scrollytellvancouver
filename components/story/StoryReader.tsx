@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import rawEvidence from '@/public/data/sources.json';
-import { chapters, costs, totalCosts, order, money, parseMenuEvidence, safeSourceUrl } from '@/lib/story';
+import { chapters, costs, totalCosts, order, money, parseMenuEvidence, safeSourceUrl, type ChapterDefinition } from '@/lib/story';
 import { ChapterNav, ContinueLink, StoryControls } from './StoryControls';
 import { MenuComparison } from './MenuComparison';
 import { RestaurantMap } from './RestaurantMap';
@@ -9,8 +9,8 @@ function Source({ url, children }: { url: unknown; children: ReactNode }) {
   const safe = safeSourceUrl(url);
   return safe ? <a href={safe}>{children}</a> : <span>{children} · source link unavailable</span>;
 }
-function Chapter({ index, children }: { index: number; children: ReactNode }) {
-  const chapter = chapters[index];
+function Chapter({ chapter, children }: { chapter: ChapterDefinition; children: ReactNode }) {
+  const index = chapters.indexOf(chapter);
   const next = chapters[index + 1];
   return <section className="story-chapter" aria-labelledby={`${chapter.id}-title`}>
     <p className="eyebrow">Chapter {index + 1} of 5</p>
@@ -39,7 +39,7 @@ export function StoryReader() {
       <div className="story-layout" id="chapters" tabIndex={-1}>
         <ChapterNav /><ChapterNav mobile />
         <article className="story-body" aria-label="Vancouver restaurant story">
-          <Chapter index={0}>
+          <Chapter chapter={chapters[0]}>
             <h3>The Sticker Shock</h3>
             <p>The same restaurant, ten years apart. These are the project’s recorded menu prices, not live prices.</p>
             <MenuComparison />
@@ -51,7 +51,7 @@ export function StoryReader() {
               <ul className="source-links"><li><Source url={evidence.menuSources['2015'].archiveUrl}>2015 menu · archived {evidence.menuSources['2015'].archiveDate}</Source></li><li><Source url={evidence.menuSources['2025'].currentUrl}>2025 menu · accessed {evidence.menuSources['2025'].accessDate}</Source></li></ul>
             </> : <p className="state-note" role="status">Menu price data unavailable. The original menus and remaining chapters are still available.</p>}
           </Chapter>
-          <Chapter index={1}>
+          <Chapter chapter={chapters[1]}>
             <p>Three forces creating the perfect storm: labour, supply and the costs of doing business.</p>
             <dl className="pressure-list">
               <div><dt>Labour Crisis</dt><dd>The original investigation records a 16,000 worker shortage and a 70.8% wage increase. These figures belong to the 2015–2025 research period.</dd></div>
@@ -61,7 +61,7 @@ export function StoryReader() {
             <p className="state-note">Historical research notes, not current quotes or a live cost index. See the research plan for each claim’s scope and supporting material.</p>
             <ContinueLink id="cost-sources">References for costs behind the counter</ContinueLink>
           </Chapter>
-          <Chapter index={2}>
+          <Chapter chapter={chapters[2]}>
             <p>When costs rise faster than customers can afford, something has to give. The original cost scene illustrates the squeeze using every $100 of revenue.</p>
             <figure className="cost-chart"><figcaption>Illustrative costs per $100 of revenue</figcaption>
               <div className="cost-bars" aria-hidden="true">{costs.map(cost => <div key={cost.label}><span>{cost.label} · {cost.percent}%</span><div><i style={{ width: `${cost.percent}%` }} /></div></div>)}</div>
@@ -72,7 +72,7 @@ export function StoryReader() {
             <ol><li>Rising costs erase thin margins.</li><li>Operators raise prices, reduce staff or cut hours.</li><li>Sticker shock drives customers away.</li><li>Lower volume puts further pressure on prices.</li></ol>
             <ContinueLink id="cost-sources">References for the cost chapter</ContinueLink>
           </Chapter>
-          <Chapter index={3}>
+          <Chapter chapter={chapters[3]}>
             <h3>Who’s Cutting Back?</h3>
             <p>The original story records 81% of 18–34 year-olds cutting back, and 75% of Canadians reducing restaurant visits. The September 2025 report also describes 41% of B.C. restaurants operating at a loss or breaking even.</p>
             <p><Source url="https://vancouver.citynews.ca/2025/09/22/restaurants-struggle-as-more-canadians-look-for-value-dine-out-less-report/">CityNews · September 22, 2025</Source></p>
@@ -82,7 +82,7 @@ export function StoryReader() {
             <dl className="pressure-list"><div><dt>High-End Dining</dt><dd>$100+ per person · Hawksworth, Boulevard, Published on Main.</dd></div><div><dt>Mid-Market Casual</dt><dd>$15–30 per person · Local diners, family restaurants, neighbourhood bistros.</dd></div><div><dt>Quick Service</dt><dd>$10–15 per person · McDonalds, Subway, Chipotle.</dd></div></dl>
             <p className="control-note">Original story examples and price bands, not current menu quotations.</p>
           </Chapter>
-          <Chapter index={4}>
+          <Chapter chapter={chapters[4]}>
             <h3>The Accelerant</h3>
             <p>During COVID-19, delivery apps promised to help struggling restaurants. The story examines how delivery fees added another pressure on both sides of the counter.</p>
             <table><caption>Original delivery-order illustration · tip not included</caption><thead><tr><th scope="col">Item</th><th scope="col">Amount</th></tr></thead><tbody>{order.map(item => <tr key={item.label}><th scope="row">{item.label}</th><td>{money(item.cents / 100)}</td></tr>)}</tbody><tfoot><tr><th scope="row">Total</th><td>{money(order.reduce((sum, item) => sum + item.cents, 0) / 100)}</td></tr></tfoot></table>

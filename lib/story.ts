@@ -1,3 +1,5 @@
+import { isRecord, isText, isFiniteNumber } from './validation.ts';
+
 /** Reading order groups the existing scenes; identifiers are stable URL fragments. */
 export const chapters = [
   { id: 'familiar-meal', title: 'The familiar meal', scenes: [1, 2] },
@@ -7,43 +9,68 @@ export const chapters = [
   { id: 'delivery-question', title: 'The delivery question', scenes: [5, 7, 10] },
 ] as const;
 export type ChapterId = typeof chapters[number]['id'];
+export type ChapterDefinition = typeof chapters[number];
+const referenceTargets = ['sources', 'cost-sources', 'delivery-sources'] as const;
+export type StoryTargetId = ChapterId | typeof referenceTargets[number];
+function fragmentId(hash: string): string | null {
+  if (!hash.startsWith('#')) return null;
+  try { return decodeURIComponent(hash.slice(1)); } catch { return null; }
+}
 export function chapterFromHash(hash: string): ChapterId | null {
-  return chapters.find(chapter => `#${chapter.id}` === hash)?.id ?? null;
+  const id = fragmentId(hash);
+  return chapters.find(chapter => chapter.id === id)?.id ?? null;
+}
+export function storyTargetFromHash(hash: string): StoryTargetId | null {
+  const id = fragmentId(hash);
+  return chapterFromHash(hash) ?? referenceTargets.find(target => target === id) ?? null;
 }
 
-type MenuSource = { restaurant: string; location: string; notes: string; keyPrices: Record<string, string> };
+type MenuSource = { restaurant: string; location: string; notes: string; keyPrices: Readonly<Record<string, string>> };
 export type MenuEvidence = {
   menuSources: {
-    '2015': MenuSource & { archiveUrl: unknown; archiveDate: string };
-    '2025': MenuSource & { currentUrl: unknown; accessDate: string };
+    '2015': MenuSource & { archiveUrl: string | null; archiveDate: string };
+    '2025': MenuSource & { currentUrl: string | null; accessDate: string };
   };
   priceComparison: { signatureDish: string; price2015: number; price2025: number; percentageIncrease: number; yearSpan: number; inflationContext: string };
 };
-const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
-const text = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
 export function safeSourceUrl(value: unknown): string | null {
-  if (!text(value)) return null;
+  if (!isText(value)) return null;
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : null; }
   catch { return null; }
 }
-/** Validate the JSON boundary. A missing number must never silently become zero. */
+function parseMenuSource(value: Record<string, unknown>): MenuSource | null {
+  const { restaurant, location, notes, keyPrices } = value;
+  if (!isText(restaurant) || !isText(location) || !isText(notes) || !isRecord(keyPrices)) return null;
+  const entries: [string, string][] = [];
+  for (const [key, price] of Object.entries(keyPrices)) {
+    if (!isText(key) || !isText(price)) return null;
+    entries.push([key, price]);
+  }
+  return entries.length ? { restaurant, location, notes, keyPrices: Object.fromEntries(entries) } : null;
+}
+/** Build a typed snapshot only from validated fields; unavailable links do not discard evidence. */
 export function parseMenuEvidence(value: unknown): MenuEvidence | null {
-  if (!record(value) || !record(value.menuSources) || !record(value.priceComparison)) return null;
-  for (const year of ['2015', '2025']) {
-    const source = value.menuSources[year];
-    if (!record(source) || !['restaurant', 'location', 'notes'].every(key => text(source[key])) || !record(source.keyPrices) || !Object.values(source.keyPrices).every(text)) return null;
-    if (!text(source[year === '2015' ? 'archiveDate' : 'accessDate'])) return null;
-    // Broken links do not discard otherwise valid chapter evidence.
-  }
-  const prices = value.priceComparison;
-  if (!text(prices.signatureDish) || !text(prices.inflationContext)) return null;
-  for (const key of ['price2015', 'price2025', 'percentageIncrease', 'yearSpan']) {
-    if (typeof prices[key] !== 'number' || !Number.isFinite(prices[key])) return null;
-  }
-  if (Number(prices.price2015) <= 0 || Number(prices.price2025) <= 0 || Number(prices.yearSpan) <= 0) return null;
-  const increase = (Number(prices.price2025) / Number(prices.price2015) - 1) * 100;
-  if (Math.abs(increase - Number(prices.percentageIncrease)) > 0.01) return null;
-  return value as MenuEvidence;
+  if (!isRecord(value)) return null;
+  const sources = value['menuSources'], comparison = value['priceComparison'];
+  if (!isRecord(sources) || !isRecord(comparison)) return null;
+  const old = sources['2015'], recent = sources['2025'];
+  if (!isRecord(old) || !isRecord(recent)) return null;
+  const menu2015 = parseMenuSource(old), menu2025 = parseMenuSource(recent);
+  const archiveDate = old['archiveDate'], accessDate = recent['accessDate'];
+  if (!menu2015 || !menu2025 || !isText(archiveDate) || !isText(accessDate)) return null;
+  const { signatureDish, price2015, price2025, percentageIncrease, yearSpan, inflationContext } = comparison;
+  if (!isText(signatureDish) || !isText(inflationContext) || !isFiniteNumber(price2015) || !isFiniteNumber(price2025) || !isFiniteNumber(percentageIncrease)) return null;
+  // These source keys are specifically 2015 and 2025, not an arbitrary year range.
+  if (price2015 <= 0 || price2025 <= 0 || yearSpan !== 2025 - 2015) return null;
+  const increase = (price2025 / price2015 - 1) * 100;
+  if (!Number.isFinite(increase) || Math.abs(increase - percentageIncrease) > 0.01) return null;
+  return {
+    menuSources: {
+      '2015': { ...menu2015, archiveDate, archiveUrl: safeSourceUrl(old['archiveUrl']) },
+      '2025': { ...menu2025, accessDate, currentUrl: safeSourceUrl(recent['currentUrl']) },
+    },
+    priceComparison: { signatureDish, price2015, price2025, percentageIncrease, yearSpan, inflationContext },
+  };
 }
 
 /** Scene3's illustrative allocation, not a newly verified industry average. */

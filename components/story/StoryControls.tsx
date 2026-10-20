@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState, useSyncExternalStore, type MouseEvent } from 'react';
-import { chapters, chapterFromHash, type ChapterId } from '@/lib/story';
+import { chapters, chapterFromHash, storyTargetFromHash, type ChapterId, type StoryTargetId } from '@/lib/story';
 
 /** Native anchors still navigate before hydration or if this enhancement fails. */
 export function focusFragment(event: MouseEvent<HTMLAnchorElement>) {
   if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  const hash = event.currentTarget.hash;
-  const target = document.getElementById(hash.slice(1));
+  const id = storyTargetFromHash(event.currentTarget.hash);
+  const target = id ? document.getElementById(id) : null;
   if (!target) return;
   // Focus within this activation. A delayed frame could steal focus from the next control.
   // Leave default anchor history/scroll behavior intact.
@@ -24,7 +24,7 @@ export function StoryControls() {
   const [requested, setRequested] = useState(false);
   const reduced = useSyncExternalStore(subscribeReduced, () => window.matchMedia(reducedQuery).matches, () => true);
   const motion = requested && !reduced;
-  useEffect(() => { document.documentElement.dataset.motion = motion ? 'on' : 'off'; }, [motion]);
+  useEffect(() => { document.documentElement.dataset['motion'] = motion ? 'on' : 'off'; }, [motion]);
   return <div className="story-controls">
     <button type="button" disabled={reduced} aria-pressed={motion} aria-describedby="motion-help" onClick={() => setRequested(!requested)}>Motion {motion ? 'on' : 'off'}</button>
     <span id="motion-help" className="control-note">{reduced ? 'Static reading · motion disabled' : 'Optional chart transitions'}</span>
@@ -57,6 +57,6 @@ export function ChapterNav({ mobile = false }: { mobile?: boolean }) {
   return mobile ? <details className="chapter-mobile"><summary>In this story · 5 chapters</summary>{links}</details> : <aside className="chapter-desktop"><p>In this story</p>{links}</aside>;
 }
 
-export function ContinueLink({ id, children }: { id: string; children: React.ReactNode }) {
+export function ContinueLink({ id, children }: { id: StoryTargetId; children: React.ReactNode }) {
   return <a className="continue-link" href={`#${id}`} onClick={focusFragment}>{children} <span aria-hidden="true">→</span></a>;
 }

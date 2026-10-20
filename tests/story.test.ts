@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { chapters, chapterFromHash, costs, totalCosts, order, money, parseMenuEvidence, safeSourceUrl } from '../lib/story.ts';
+import { parseRestaurantRecords, projectRestaurant } from '../lib/restaurant-state.ts';
 import { closedRestaurants } from '../lib/restaurants.ts';
 const fixture = () => JSON.parse(readFileSync(new URL('../public/data/sources.json', import.meta.url), 'utf8'));
 
@@ -44,4 +45,38 @@ test('cost and fee illustrations preserve arithmetic and units', () => {
 test('map preserves all five original source records and valid coordinates', () => {
   assert.deepEqual(closedRestaurants.map(r => [r.name,r.yearClosed]), [["Kent's Kitchen",2023],["Zefferelli's",2022],['The Templeton',2024],['Burgoo Bistro',2023],['The Arbor',2024]]);
   for (const restaurant of closedRestaurants) { assert.ok(restaurant.lat > 49.25 && restaurant.lat < 49.3); assert.ok(restaurant.lng > -123.15 && restaurant.lng < -123.1); }
+});
+
+test('encoded chapter fragments resolve, malformed and unrelated fragments do not', () => {
+  assert.equal(chapterFromHash('#impossible%2Dmath'), 'impossible-math');
+  assert.equal(chapterFromHash('#%E0%A4%A'), null);
+  assert.equal(chapterFromHash('#sources'), null);
+});
+test('incomplete price lists and a year span inconsistent with the menu years are unavailable', () => {
+  const empty = fixture(); empty.menuSources['2015'].keyPrices = {};
+  assert.equal(parseMenuEvidence(empty), null);
+  const years = fixture(); years.priceComparison.yearSpan = 9;
+  assert.equal(parseMenuEvidence(years), null);
+});
+
+test('map boundary preserves original records, rejects ambiguous IDs, and keeps missing coordinates honest', () => {
+  assert.deepEqual(parseRestaurantRecords(closedRestaurants).records, closedRestaurants);
+  const first = closedRestaurants[0]; assert.ok(first);
+  const duplicate = parseRestaurantRecords([first, { ...first, name: 'Duplicate record' }]);
+  assert.equal(duplicate.records.length, 1); assert.equal(duplicate.rejected, 1);
+  const missing = parseRestaurantRecords([{ ...first, lat: NaN }, null]);
+  const readable = missing.records[0]; assert.ok(readable);
+  assert.equal(readable.name, first.name); assert.equal(readable.lat, null); assert.equal(readable.lng, null);
+  assert.equal(projectRestaurant(readable), null); assert.equal(missing.rejected, 1);
+  assert.equal(parseRestaurantRecords([]).status, 'empty');
+  for (const invalid of [null, {}, [null], [{ id: '1' }]]) assert.equal(parseRestaurantRecords(invalid).status, 'invalid');
+});
+test('map projection preserves original pin positions and excludes out-of-area points without deleting text records', () => {
+  for (const record of parseRestaurantRecords(closedRestaurants).records) {
+    const pin = projectRestaurant(record); assert.ok(pin);
+    assert.ok(pin.left >= 12 && pin.left <= 84); assert.ok(pin.top >= 14 && pin.top <= 82);
+  }
+  const first = closedRestaurants[0]; assert.ok(first);
+  const outside = parseRestaurantRecords([{ ...first, lat: 0, lng: 0 }]).records[0]; assert.ok(outside);
+  assert.equal(projectRestaurant(outside), null); assert.equal(outside.story, first.story);
 });

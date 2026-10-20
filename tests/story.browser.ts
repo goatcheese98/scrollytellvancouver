@@ -51,11 +51,13 @@ for (const width of [320,390,768,1024,1440]) for (const colorScheme of ['light',
       text: getComputedStyle(element).color, background: getComputedStyle(document.body).backgroundColor,
     }));
     const luminance = (color: string) => {
-      const rgb = color.match(/\d+/g)!.slice(0,3).map(Number).map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
-      return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
+      const rgb = color.match(/\d+/g)?.slice(0,3).map(Number).map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+      const [red, green, blue] = rgb ?? [];
+      if (red === undefined || green === undefined || blue === undefined) throw new Error('Expected an RGB color');
+      return red * .2126 + green * .7152 + blue * .0722;
     };
-    const levels = [luminance(textColors.text), luminance(textColors.background)].sort((a,b) => b-a);
-    expect((levels[0]+.05)/(levels[1]+.05)).toBeGreaterThanOrEqual(4.5);
+    const textLevel = luminance(textColors.text), backgroundLevel = luminance(textColors.background);
+    expect((Math.max(textLevel, backgroundLevel)+.05)/(Math.min(textLevel, backgroundLevel)+.05)).toBeGreaterThanOrEqual(4.5);
     expect(external).toEqual([]); expect(errors).toEqual([]);
     await page.evaluate(() => window.scrollTo(0,0));
     await expect(nav.getByRole('link',{name:/01.*familiar meal/})).toHaveAttribute('aria-current','location');
@@ -75,6 +77,8 @@ test('motion opt-in, live reduced-motion preference, native history and deep lin
   await page.getByRole('link',{name:'Continue to changing habits'}).click(); await expect(page).toHaveURL(/#changing-habits$/);
   await page.goBack(); await expect(page).toHaveURL(/#impossible-math$/);
   await page.goto('/#%E0%A4%A'); await expect(page.getByRole('heading',{level:1})).toBeVisible();
+  await page.goto('/#impossible%2Dmath');
+  await expect(page.getByRole('navigation',{name:'Chapters'}).filter({visible:true}).getByRole('link',{name:/03.*impossible math/})).toHaveAttribute('aria-current','location');
 });
 
 test('image failure leaves price evidence and an honest disabled control', async ({ page }) => {

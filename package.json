@@ -8,9 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/story.test.ts",
+    "test": "node --experimental-strip-types --import ./tests/register-tsx.mts --test tests/story.test.ts tests/story-components.test.ts",
     "test:browser": "playwright test",
-    "lint:story": "eslint app/page.tsx app/layout.tsx components/story lib/story.ts lib/restaurants.ts tests playwright.config.ts --max-warnings=0"
+    "lint:story": "eslint app/page.tsx app/layout.tsx components/story lib/story.ts lib/restaurants.ts lib/restaurant-state.ts lib/validation.ts tests playwright.config.ts next.config.ts --max-warnings=0",
+    "typecheck:story": "tsc -p tsconfig.story.json"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.35.0",

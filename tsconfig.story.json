@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "incremental": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "app/page.tsx",
+    "app/layout.tsx",
+    "components/story/**/*.tsx",
+    "lib/story.ts",
+    "lib/restaurants.ts",
+    "tests/**/*.ts",
+    "playwright.config.ts",
+    "next.config.ts",
+    "tests/**/*.mts"
+  ]
+}
